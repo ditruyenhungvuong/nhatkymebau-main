@@ -1,0 +1,1929 @@
+/* --- CẤU HÌNH CHUNG --- */
+html, body {
+    width: 100%; height: 100%;
+    margin: 0; padding: 0;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none; -webkit-user-select: none;
+    transition: background 1.5s ease;
+}
+.hair-tone { 
+    fill: #5D4037; 
+}
+
+.stage {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease;
+    display: none;
+}
+
+.stage.active {
+    opacity: 1;
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- CANVAS PHÁO HOA --- */
+#fireworks-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+#back-btn {
+    position: fixed;       
+    top: 20px;
+    left: 20px;
+    z-index: 9999;            
+    
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.6); 
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    
+    border: 1px solid rgba(0, 105, 92, 0.3);
+    border-radius: 20px;
+    color: #00695c;            
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    
+    display: none;             
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+#back-btn:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: scale(1.05);
+}
+
+#back-btn:active {
+    transform: scale(0.95);
+}
+
+/* --- STAGE 0: WELCOME --- */
+#stage-0 .welcome-container {
+    text-align: center;
+    width: 90%; max-width: 400px;
+    background: rgba(255, 255, 255, 0.85);
+    padding: 40px 20px;
+    border-radius: 30px;
+    box-shadow: 0 10px 30px rgba(233, 30, 99, 0.1);
+    animation: fadeIn 1s;
+}
+#stage-0 h1 { font-size: 32px; margin-bottom: 10px; color: #d81b60; margin-top: 0; }
+#stage-0 .welcome-sub { font-size: 18px; line-height: 1.5; margin-bottom: 30px; color: #8d6e63; }
+#username-input {
+    width: 100%; padding: 15px; font-size: 18px;
+    border: 2px solid #ffcc80; border-radius: 25px;
+    outline: none; text-align: center; box-sizing: border-box;
+    margin-bottom: 25px; background: #fff; color: #d81b60;
+    transition: border-color 0.3s; -webkit-appearance: none;
+}
+#username-input:focus { border-color: #d81b60; }
+.btn-start {
+    padding: 15px 40px; background-color: #ec407a; color: white;
+    border: none; border-radius: 30px; font-size: 18px; font-weight: bold;
+    cursor: pointer; box-shadow: 0 5px 15px rgba(236, 64, 122, 0.3);
+    transition: transform 0.2s; -webkit-appearance: none;
+}
+.btn-start:active { transform: scale(0.95); }
+
+/* --- STAGE 1: STOP MONKEY --- */
+#stage-1 { display: block; } 
+#greeting-text {
+    position: absolute;
+    top: 12%;    
+    left: 50%; 
+    transform: translateX(-50%); 
+    width: 95%;
+    text-align: center;
+    
+    font-size: 32px;          
+    font-weight: 800;          
+    color: #1b5e20;           
+    z-index: 20;
+    
+    
+    text-shadow: 0 2px 10px rgba(255, 255, 255, 0.8);
+    
+    animation: floatUp 1s ease-out;
+}
+#stage-1 .garden-scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
+#stage-1 .fountain { 
+    position: relative !important; 
+    top: 0 !important;
+    left: 0 !important;
+    transform: none !important; 
+    font-size: 100px !important; 
+    margin-bottom: 300px !important; 
+    opacity: 1 !important; 
+    z-index: 5; 
+}
+
+#monkey-metaphor {
+    position: absolute;
+    top: 28%;
+    left: 50%;
+    transform: translateX(-50%); 
+    width: 90%;
+    text-align: center;
+    
+    font-size: 20px;          
+    font-weight: 600;
+    color: #2e7d32;           
+    line-height: 1.5;
+    z-index: 15;
+    text-shadow: 0 1px 5px rgba(255, 255, 255, 0.6);
+    transition: opacity 0.5s ease;
+}
+.monkey.vanishing {
+
+    opacity: 0 !important;      
+    transition: opacity 3s linear, filter 3s linear;  
+
+    animation-play-state: paused !important; 
+
+    filter: blur(2px);
+    transform: scale(0.9);
+}
+
+#stage-1 #top-message-area { position: absolute; top: 9%; left: 0; width: 100%; text-align: center; z-index: 150; pointer-events: none; }
+#stage-1 .safe-quote { font-size: 35px; font-weight: bold; color: #00695c; line-height: 1.6; margin-top: 40px; text-shadow: 2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff, 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff,0 0 10px rgba(255, 255, 255, 0.8); animation: floatUp 1.5s ease-out; }
+#stage-1 #controls-container { position: absolute; bottom: 50px; left: 0; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; z-index: 100; }
+#stage-1 #countdown-display { 
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    z-index: 200; 
+    text-align: center;
+    width: 100%;
+    pointer-events: none;
+    height: auto; 
+}
+#stage-1 .count-number { 
+    font-size: 100px; /* Tăng kích thước số lên rất to */
+    color: #d84315; 
+    font-weight: 900; 
+    text-shadow: 4px 4px 0 white, 0 0 20px rgba(255,255,255,0.5); 
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+}
+.quiet-text {
+    font-size: 40px; /* Chữ to theo yêu cầu */
+    font-weight: 800;
+    color: #00695c;
+    text-shadow: 
+        2px 2px 0 #fff, 
+        0 0 30px rgba(255, 255, 255, 0.9);
+        animation: fadeIn 1s ease-out forwards;
+}
+#stage-1 #stop-btn { width: 100px; height: 100px; border-radius: 50%; background-color: #ff5722; border: 5px solid white; color: white; font-size: 40px; cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.3); transition: transform 0.1s, background 0.3s; display: flex; align-items: center; justify-content: center; -webkit-appearance: none; outline: none; }
+#stage-1 #stop-btn:active { transform: scale(0.92); background-color: #d84315; }
+#stage-1 #guide-text-s1 { color: #1b5e20; font-size: 16xpx; margin-top: 15px; text-align: center; max-width: 80%; min-height: 40px; font-weight: 500; }
+#stage-1 #success-panel { display: none; flex-direction: column; align-items: center; text-align: center; padding: 0 20px; animation: fadeIn 1s; }
+#stage-1 .congrats-text { color: #2e7d32; font-size: 18px; margin-bottom: 20px; line-height: 1.5; background: rgba(255,255,255,0.7); padding: 15px; border-radius: 15px; }
+#stage-1 .next-btn { padding: 12px 35px; background: #00897b; color: white; border: none; border-radius: 30px; font-size: 18px; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.2); cursor: pointer; animation: pulseBtn 2s infinite; }
+#stage-1 .monkey { position: absolute; font-size: 32px; z-index: 20; will-change: transform; }
+#stage-1 .running { animation: chaoticJump 2.5s infinite ease-in-out alternate; }
+#stage-1 .fade-out { transition: opacity 1.5s, transform 1.5s; opacity: 0; transform: scale(0); }
+
+/* --- STAGE 2: DRAGON --- */
+#stage-2 #instruction-dragon { 
+    position: relative !important; 
+    top: auto !important; 
+    margin-bottom: 120px !important; /* Chỉnh số này càng to thì chữ càng xích lên cao */
+    width: 100%; 
+    font-size: 28px !important; /* Chữ to hơn một chút */
+    color: #006064; 
+    text-align: center; 
+    font-weight: bold; 
+    transition: color 0.3s; 
+    z-index: 20; 
+}
+#stage-2 .game-scene { display: flex; align-items: center; justify-content: center; gap: 40px; transform: scale(0.95); margin-top: -50px; }
+#stage-2 .dragon-container { position: relative; width: 150px; height: 180px; }
+#stage-2 .head { position: absolute; top: 0; left: 20px; width: 95px; height: 85px; background-color: #66bb6a; border-radius: 45px 45px 25px 25px; z-index: 5; box-shadow: inset -5px -5px 10px rgba(0,0,0,0.1); }
+#stage-2 .eye { position: absolute; top: 35px; left: 55px; width: 14px; height: 8px; border-top: 3px solid #333; border-radius: 50% 50% 0 0; background: transparent; z-index: 6; }
+#stage-2 .cheek { position: absolute; top: 48px; left: 58px; width: 14px; height: 8px; background-color: #ff8a80; border-radius: 50%; opacity: 0.6; z-index: 6; }
+#stage-2 .mouth { position: absolute; top: 58px; left: 65px; z-index: 6; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+#stage-2 .mouth.smile { width: 20px; height: 10px; background: transparent; border-bottom: 3px solid #333; border-radius: 0 0 50% 50%; transform: rotate(5deg); }
+#stage-2 .mouth.blowing { width: 12px; height: 12px; background: #333; border: none; border-radius: 50%; top: 55px; left: 75px; }
+#stage-2 .body { position: absolute; bottom: 0; left: 10px; width: 110px; height: 110px; background-color: #66bb6a; border-radius: 50px 50px 20px 20px; z-index: 3; }
+#stage-2 .belly { 
+    position: absolute; 
+    bottom: 10px; 
+    left: 25px; 
+    width: 80px; 
+    height: 80px; 
+    background-color: #fff176; 
+    border-radius: 50%; 
+    z-index: 4; 
+    transform-origin: center bottom; 
+    transition: transform 0.2s ease-out; /* Tăng độ mượt khi nhả ra */
+    box-shadow: inset 0 0 10px rgba(255,160,0,0.2); 
+}
+#stage-2 .belly.inhaling { transform: scale(1.25); transition: transform 3s ease-out; }
+#stage-2 .arm { position: absolute; top: 100px; width: 30px; height: 40px; background-color: #4caf50; border-radius: 20px; z-index: 5; }
+#stage-2 .arm.left { left: 0; transform: rotate(30deg); }
+#stage-2 .arm.right { right: 0; transform: rotate(-30deg); }
+#stage-2 .fire-stream { 
+    position: absolute; 
+    top: 55px; 
+    left: 85px; 
+    width: 0; 
+    height: 30px; 
+    background: linear-gradient(90deg, #ff5722, #ffeb3b, rgba(255,255,255,0)); 
+    border-radius: 50px; 
+    opacity: 0; 
+    z-index: 10; 
+    transform-origin: left center; 
+    transition: width 1.2s ease-out, opacity 0.5s;
+}
+#stage-2 .fire-stream.active { 
+    width: 180px;
+    opacity: 1;
+    animation: fireFlicker 0.1s infinite alternate; 
+}
+#stage-2 .pinwheel-wrapper { position: relative; width: 150px; height: 250px; }
+#stage-2 .pinwheel-container { position: relative; width: 160px; height: 160px; transition: transform 0.1s linear; }
+#stage-2 .blade { position: absolute; width: 80px; height: 80px; border-radius: 50% 0 50% 0; top: 50%; left: 50%; transform-origin: 0 0; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); }
+#stage-2 .b1 { transform: rotate(0deg); background-color: #ff8a80; }
+#stage-2 .b2 { transform: rotate(90deg); background-color: #80cbc4; }
+#stage-2 .b3 { transform: rotate(180deg); background-color: #90caf9; }
+#stage-2 .b4 { transform: rotate(270deg); background-color: #ce93d8; }
+#stage-2 .center-dot { position: absolute; width: 15px; height: 15px; background: #fff; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; }
+#stage-2 .stick { width: 8px; height: 160px; background-color: #8d6e63; position: absolute; top: 80px; left: 50%; transform: translateX(-50%); z-index: -1; border-radius: 4px; }
+#stage-2 #interaction-area { position: absolute; bottom: 110px; padding: 15px 50px; background-color: white; border: 3px solid #4caf50; color: #4caf50; border-radius: 50px; cursor: pointer; font-size: 18px; font-weight: bold; box-shadow: 0 6px 15px rgba(0,0,0,0.1); transition: all 0.2s; outline: none; -webkit-appearance: none; z-index: 100; }
+#stage-2 #interaction-area:active { transform: scale(0.95); background-color: #4caf50; color: white; }
+#stage-2 #next-btn-dragon { position: absolute; bottom: 40px; padding: 12px 30px; background-color: #00838f; color: white; border: none; border-radius: 30px; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: transform 0.2s; outline: none; -webkit-appearance: none; z-index: 100; }
+
+/* --- STAGE 3: BODY SCAN --- */
+#stage-3 #guide-text-body { position: relative; top: auto; width: 85%; text-align: center; font-size: 21px; color: #004d40; font-weight: 600; min-height: 60px; transition: opacity 0.5s; text-shadow: 1px 1px 5px rgba(255,255,255,0.8); z-index: 10; }
+#stage-3 #meditation-container { position: relative; width: 320px; height: 480px; margin-top: 30px; }
+
+/* CSS CHO SVG THAI PHỤ */
+#pregnant-standing-svg {
+    width: 100%; height: 100%;
+    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
+}
+.dress-shape { fill: #F8BBD0; } /* Váy hồng */
+.skin-tone { fill: #FFCCBC; }
+.hair-tone { fill: #5D4037; }
+.facial-features { fill: none; stroke: #5D4037; stroke-width: 2; stroke-linecap: round; }
+.heart-pattern { fill: #E53935; opacity: 0.8; } /* Trái tim đỏ trên váy */
+
+#stage-3 .dot { position: absolute; width: 26px; height: 26px; border-radius: 50%; cursor: pointer; transform: translate(-50%, -50%); transition: all 0.5s ease; box-shadow: 0 0 10px rgba(0,0,0,0.2); z-index: 5; display: none; }
+#stage-3 .dot.active { display: block; background-color: #e57373; border: 3px solid white; animation: pulse-red 1.8s infinite ease-in-out; }
+#stage-3 .dot.relaxed { display: block; background-color: #4db6ac; box-shadow: 0 0 20px #4db6ac; border: 2px solid #b2dfdb; animation: none; pointer-events: none; }
+#stage-3 .ripple { position: absolute; width: 20px; height: 20px; border-radius: 50%; background: rgba(77, 182, 172, 0.6); transform: translate(-50%, -50%); pointer-events: none; animation: ripple-effect 1.2s ease-out forwards; }
+#stage-3 #action-buttons-body { display: none; flex-direction: column; align-items: center; gap: 15px; margin-top: 20px; width: 100%; animation: fadeInUp 1s ease; z-index: 20; }
+#stage-3 button { padding: 12px 30px; border-radius: 30px; font-size: 16px; font-weight: 600; cursor: pointer; width: 240px; border: none; transition: transform 0.2s; -webkit-appearance: none; }
+#stage-3 #continue-btn-body { background-color: #00796b; color: white; box-shadow: 0 4px 10px rgba(0, 121, 107, 0.4); }
+#stage-3 #restart-btn-body { background-color: rgba(255, 255, 255, 0.6); color: #004d40; border: 1px solid #004d40; }
+
+/* --- STAGE 4: CAPYBARA CHECK-IN --- */
+#stage-4 #selection-screen { text-align: center; transition: opacity 0.5s ease-out; width: 95%; max-width: 800px; }
+#stage-4 h2 { font-size: 22px; margin-bottom: 5px; color: #ef6c00; }
+#stage-4 .subtitle { font-size: 15px; color: #795548; margin-bottom: 20px; font-style: italic; }
+#stage-4 .emotion-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; padding: 10px; }
+#stage-4 .capy-card { background: white; border-radius: 20px; padding: 0; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; border: 3px solid transparent; height: auto; aspect-ratio: 1; overflow: hidden; }
+#stage-4 .capy-card:active { transform: scale(0.95); border-color: #ffcc80; }
+#stage-4 .capy-img { width: 100%; height: 100%; max-width: none; max-height: none; object-fit: cover; margin-bottom: 0; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.1)); pointer-events: none; }
+#stage-4 #feedback-screen { display: none; text-align: center; opacity: 0; transition: opacity 1s ease-in; padding: 30px; background: rgba(255, 255, 255, 0.95); border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); max-width: 80%; }
+#stage-4 .feedback-text { font-size: 20px; line-height: 1.5; color: #00695c; margin-bottom: 20px; }
+#stage-4 .btn-next-capy { padding: 12px 30px; background-color: #ef6c00; color: white; border: none; border-radius: 25px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(239, 108, 0, 0.3); transition: transform 0.2s; }
+@media (max-width: 400px) { #stage-4 .emotion-grid { grid-template-columns: repeat(2, 1fr); } }
+
+/* --- STAGE 5: CLOUDS --- */
+#stage-5 .sun { position: absolute; top: 40px; right: 200px !important; width: 70px; height: 70px; background: #FFD700; border-radius: 50%; box-shadow: 0 0 50px #FFD700; opacity: 0.9; }
+#stage-5 #input-container-cloud { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 100; text-align: center; transition: all 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55); background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); width: 85%; max-width: 400px; opacity: 1; pointer-events: auto; }
+#stage-5 #input-container-cloud.hidden { opacity: 0; pointer-events: none; bottom: -300px; transform: translateX(-50%) scale(0.8); }
+#stage-5 h2 { color: #00838F; margin-top: 0; margin-bottom: 10px; font-size: 22px; font-weight: 700; }
+#stage-5 p { color: #555; font-size: 15px; line-height: 1.5; margin-bottom: 20px; }
+#stage-5 input[type="text"] { padding: 12px; width: 100%; box-sizing: border-box; border: 2px solid #B2EBF2; border-radius: 12px; font-size: 16px; outline: none; margin-bottom: 15px; background: #fff; -webkit-appearance: none; }
+#stage-5 input::placeholder { font-style: italic; color: #90A4AE; opacity: 0.8; }
+#stage-5 .btn-primary { width: 100%; padding: 12px 0; background-color: #00BCD4; color: white; border: none; border-radius: 25px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); -webkit-appearance: none; margin-bottom: 10px; }
+#stage-5 .btn-secondary { width: 100%; padding: 10px 0; background-color: transparent; color: #00838F; border: 2px solid #B2EBF2; border-radius: 25px; font-size: 15px; font-weight: 600; cursor: pointer; -webkit-appearance: none; }
+#stage-5 #hint-text-cloud { position: absolute; bottom: 15%; width: 100%; text-align: center; color: #006064; font-size: 20px; font-weight: 600; opacity: 0; transition: opacity 1s; pointer-events: none; text-shadow: 0 0 10px white; animation: pulse 2s infinite; padding: 0 20px; box-sizing: border-box; }
+#stage-5 #hint-text-cloud.show { opacity: 0.8; }
+#stage-5 .cloud-wrapper { position: absolute; left: 50%; top: 40%; transform: translate(-50%, -50%); pointer-events: none; z-index: 50; }
+#stage-5 .cloud-body { --cloud-color: #fff; background: var(--cloud-color); display: inline-block; min-width: 120px; max-width: 250px; padding: 15px 25px; border-radius: 50px; position: relative; color: #444; font-size: 16px; line-height: 1.4; text-align: center; box-shadow: 0 8px 15px rgba(0,0,0,0.1); word-wrap: break-word; white-space: normal; }
+#stage-5 .cloud-body::before, #stage-5 .cloud-body::after { content: ''; background: var(--cloud-color); position: absolute; border-radius: 50%; z-index: -1; }
+#stage-5 .cloud-body::before { width: 50px; height: 50px; top: -20px; left: 15px; }
+#stage-5 .cloud-body::after { width: 60px; height: 60px; top: -30px; right: 15px; }
+#stage-5 .flying-right { animation: meanderRight 20s linear forwards; }
+#stage-5 .flying-left { animation: meanderLeft 22s linear forwards; }
+
+/* --- STAGE 6: JAR --- */
+#stage-6 {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%; height: 100%;
+}
+#stage-6.active { display: flex; }
+
+/* Màn hình giới thiệu (Giữ nguyên) */
+#stage-6 #intro-screen-jar { text-align: center; padding: 20px; transition: opacity 0.5s; }
+#stage-6 .instruction-text { font-size: 20px; line-height: 1.6; margin-bottom: 30px; max-width: 500px; color: #880e4f; }
+#stage-6 .mantra { font-size: 24px; font-weight: bold; color: #d81b60; margin: 20px 0; font-style: italic; animation: glow 2s infinite alternate; }
+
+/* Màn hình viết lời nhắn */
+#stage-6 #write-screen-jar { 
+    display: none; 
+    flex-direction: column; 
+    align-items: center; 
+    opacity: 0; 
+    transition: opacity 1s; 
+    width: 100%; /* Đảm bảo căn giữa */
+}
+
+/* --- TRÁI TIM (ĐÃ THU NHỎ) --- */
+.heart-note {
+    position: relative;
+    width: 200px;  /* Giảm kích thước xuống 200px cho vừa vặn */
+    height: 200px;
+    background-color: #ffcdd2;
+    transform: rotate(-45deg);
+    
+    /* Tăng margin-top để không che mất chữ bên trên */
+    margin: 100px auto 60px auto; 
+    
+    box-shadow: 5px 5px 20px rgba(233, 30, 99, 0.2);
+    animation: floatHeart 3s ease-in-out infinite;
+    z-index: 10;
+}
+
+.heart-note::before,
+.heart-note::after {
+    content: "";
+    position: absolute;
+    width: 200px; /* Kích thước bằng khung chính */
+    height: 200px;
+    background-color: #ffcdd2;
+    border-radius: 50%;
+}
+
+.heart-note::before {
+    top: -100px; /* Bằng 1/2 chiều cao (200/2) */
+    left: 0;
+}
+
+.heart-note::after {
+    left: 100px; /* Bằng 1/2 chiều rộng (200/2) */
+    top: 0;
+}
+
+/* Ô nhập liệu bên trong trái tim */
+#stage-6 textarea {
+    position: absolute;
+    top: 50%; left: 50%;
+    
+    /* Xoay ngược 45 độ để chữ nằm ngang thẳng hàng */
+    transform: translate(-50%, -50%) rotate(45deg); 
+    z-index: 15;
+    
+    width: 160px; /* Vừa vặn trong lòng tim */
+    height: 120px;
+    
+    background: transparent;
+    border: none; outline: none;
+    text-align: center;
+    font-family: 'Nunito', cursive, sans-serif;
+    font-size: 18px; 
+    color: #c2185b;
+    resize: none;
+}
+
+#stage-6 textarea::placeholder {
+    color: #ef9a9a;
+    font-style: italic;
+    font-size: 16px;
+}
+
+/* Nút cất vào hũ */
+#stage-6 .btn {
+    /* Kích thước và Font chữ */
+    padding: 15px 40px;
+    font-size: 18px;
+    font-weight: bold;
+    
+    /* Màu sắc Gradient chuẩn (Hồng đậm dần) */
+    background: linear-gradient(45deg, #ec407a, #d81b60);
+    color: white;
+    
+    /* Bo tròn và viền */
+    border: none;
+    border-radius: 30px; /* Bo tròn hình viên thuốc */
+    
+    /* Hiệu ứng và Con trỏ */
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(233, 30, 99, 0.3); /* Bóng đổ màu hồng */
+    transition: all 0.2s ease; /* Chuyển động mượt mà */
+    
+    /* Căn chỉnh vị trí */
+    margin-top: 30px; /* Cách xa trái tim ra một chút cho thoáng */
+    position: relative;
+    z-index: 20; /* Đảm bảo nút nổi lên trên cùng */
+    outline: none;
+    -webkit-appearance: none;
+}
+
+/* Hiệu ứng khi di chuột vào (Hover) */
+#stage-6 .btn:hover {
+    transform: translateY(-3px); /* Nổi lên nhẹ */
+    box-shadow: 0 8px 25px rgba(233, 30, 99, 0.5); /* Bóng đậm hơn */
+}
+
+/* Hiệu ứng khi bấm xuống (Active) */
+#stage-6 .btn:active {
+    transform: scale(0.95); /* Thu nhỏ lại một chút tạo cảm giác bấm thật */
+    box-shadow: 0 2px 5px rgba(233, 30, 99, 0.3);
+}
+
+/* Các phần khác giữ nguyên (Hũ, tim bay...) */
+#stage-6 #jar-screen-final { display: none; position: relative; width: 100%; height: 100%; align-items: center; justify-content: center; }
+#stage-6 .jar { position: relative; width: 200px; height: 280px; background: rgba(255, 255, 255, 0.3); border: 4px solid #fff; border-radius: 20px 20px 50px 50px; box-shadow: 0 0 20px rgba(255,255,255,0.5); overflow: hidden; display: flex; align-items: flex-end; justify-content: center; z-index: 5; backdrop-filter: blur(5px); }
+#stage-6 .jar::before { content: ''; position: absolute; top: -15px; left: 10px; right: 10px; height: 15px; background: #fff; border-radius: 5px; }
+#stage-6 .small-heart { position: absolute; width: 40px; height: 40px; background-color: #e91e63; transform: rotate(-45deg); opacity: 0.9; }
+#stage-6 .small-heart::before, #stage-6 .small-heart::after { content: ""; position: absolute; width: 40px; height: 40px; background-color: #e91e63; border-radius: 50%; }
+#stage-6 .small-heart::before { top: -20px; left: 0; }
+#stage-6 .small-heart::after { left: 20px; top: 0; }
+#stage-6 #final-message { position: absolute; bottom: 15% !important; font-size: 28px !important; color: #880e4f; text-align: center; opacity: 0; font-weight: bold; transition: opacity 2s; width: 90%; z-index: 20; }
+#stage-6 #continue-btn-jar { position: absolute; bottom: 5% !important; background-color: #ad1457; display: none; opacity: 0; transition: opacity 1s; z-index: 20; }
+
+/* ANIMATIONS CHUNG */
+@keyframes chaoticJump { 0% { transform: translate(0, 0) rotate(0deg); } 20% { transform: translate(60px, -70px) rotate(15deg); } 40% { transform: translate(-50px, 50px) rotate(-12deg); } 60% { transform: translate(70px, -30px) rotate(8deg); } 80% { transform: translate(-40px, -60px) rotate(-10deg); } 100% { transform: translate(0, 0) rotate(0deg); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes popIn { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes pulseBtn { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+@keyframes floatUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse-red { 0% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 0 0 rgba(229, 115, 115, 0.7); } 70% { transform: translate(-50%, -50%) scale(1.2); box-shadow: 0 0 0 15px rgba(229, 115, 115, 0); } 100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 0 0 rgba(229, 115, 115, 0); } }
+@keyframes ripple-effect { 0% { width: 20px; height: 20px; opacity: 0.8; } 100% { width: 250px; height: 250px; opacity: 0; } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes shootFire { 0% { width: 0; opacity: 0.8; } 20% { width: 160px; opacity: 1; } 100% { width: 180px; opacity: 0; } }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+@keyframes meanderRight { 0% { transform: translate(-50%, -50%) scale(0.1); opacity: 0; } 10% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 100% { transform: translate(120vw, -50px); opacity: 0; } }
+@keyframes meanderLeft { 0% { transform: translate(-50%, -50%) scale(0.1); opacity: 0; } 10% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 100% { transform: translate(-120vw, 50px); opacity: 0; } }
+@keyframes glow { from { text-shadow: 0 0 5px rgba(216, 27, 96, 0.2); } to { text-shadow: 0 0 15px rgba(216, 27, 96, 0.6); } }
+@keyframes floatHeart { 0%, 100% { transform: rotate(-45deg) translate(0, 0); } 50% { transform: rotate(-45deg) translate(-10px, 10px); } }
+@keyframes flyToJar { 0% { top: 30%; left: 50%; transform: translate(-50%, -50%) scale(3) rotate(-45deg); opacity: 1; } 100% { top: 70%; left: 50%; transform: translate(-50%, -50%) scale(0.5) rotate(-45deg); opacity: 0.8; } }
+@keyframes fireFlicker { 
+    0% { transform: scaleY(1) scaleX(1); opacity: 0.9; } 
+    100% { transform: scaleY(1.1) scaleX(1.02); opacity: 1; } 
+}
+
+
+/* Thêm hiệu ứng viền sáng nhẹ cho ngôi sao */
+.glowing-star {
+    display: inline-block; /* Để animation hoạt động mượt mà */
+    /* text-shadow: offset-x offset-y blur-radius color */
+    /* Tạo 3 lớp bóng mờ để hiệu ứng trông tự nhiên hơn */
+    text-shadow: 
+        0 0 5px #ffd700,  /* Lớp trong cùng, sắc nét nhất */
+        0 0 10px #ffb300, /* Lớp giữa, mờ hơn */
+        0 0 15px #ff8c00; /* Lớp ngoài cùng, mờ nhất và lan tỏa nhẹ */
+    
+    /* Tùy chọn: Thêm hiệu ứng nhấp nháy nhẹ để sinh động hơn */
+    animation: softGlowPulse 2s infinite alternate ease-in-out;
+}
+
+/* Định nghĩa chuyển động nhấp nháy */
+@keyframes softGlowPulse {
+    from {
+        text-shadow: 
+            0 0 5px #ffd700,
+            0 0 10px #ffb300,
+            0 0 15px #ff8c00;
+        transform: scale(1);
+    }
+    to {
+        text-shadow: 
+            0 0 10px #ffd700,
+            0 0 20px #ffb300,
+            0 0 25px #ff8c00;
+        transform: scale(1.1); /* Phóng to nhẹ */
+    }
+}
+
+
+
+#stage-1 .safe-quote {
+    text-shadow: 
+        0 0 5px rgb(255, 255, 255), 
+        0 0 20px rgba(255, 255, 255, 0.6);
+    animation: floatUp 1.5s ease-out;
+}
+
+.falling-heart {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background-color: #ec407a;
+    top: 20%; /* Vị trí bắt đầu (trùng chỗ viết lời nhắn) */
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    z-index: 100; /* Nổi lên trên cùng */
+    
+    /* Tạo hình trái tim */
+}
+.falling-heart::before, .falling-heart::after {
+    content: "";
+    position: absolute;
+    width: 60px; height: 60px;
+    background-color: #ec407a;
+    border-radius: 50%;
+}
+.falling-heart::before { top: -30px; left: 0; }
+.falling-heart::after { left: 30px; top: 0; }
+
+/* 2. Animation Rơi */
+.animate-drop {
+    animation: dropIntoJar 1.5s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards;
+}
+
+@keyframes dropIntoJar {
+    0% {
+        top: 20%;
+        opacity: 1;
+        transform: translate(-50%, -50%) rotate(-45deg) scale(1);
+    }
+    60% {
+        /* Rơi xuống miệng hũ */
+        top: 60%;
+        transform: translate(-50%, -50%) rotate(-45deg) scale(0.5);
+        opacity: 1;
+    }
+    100% {
+        /* Chui vào trong hũ và biến mất */
+        top: 75%;
+        transform: translate(-50%, -50%) rotate(-45deg) scale(0.3);
+        opacity: 0; 
+    }
+}
+
+/* 3. Trái tim đã nằm trong hũ (Tĩnh) */
+.heart-in-jar {
+    position: absolute;
+    width: 30px; height: 30px;
+    background-color: #e91e63;
+    transform: rotate(-45deg);
+    bottom: 20px;
+    left: 50%;
+    margin-left: -15px; /* Căn giữa */
+    animation: popIn 0.5s ease-out;
+}
+.heart-in-jar::before, .heart-in-jar::after {
+    content: ""; position: absolute;
+    width: 30px; height: 30px;
+    background-color: #e91e63; border-radius: 50%;
+}
+.heart-in-jar::before { top: -15px; left: 0; }
+.heart-in-jar::after { left: 15px; top: 0; }
+
+#emotion-range, #final-range {
+    -webkit-appearance: none; /* Tắt kiểu mặc định của trình duyệt */
+    width: 100%;
+    height: 15px;
+    border-radius: 10px;
+    outline: none;
+    /* background sẽ được set trong HTML */
+}
+
+/* Làm cho đường chạy (track) trong suốt để thấy background gradient */
+#emotion-range::-webkit-slider-runnable-track,
+#final-range::-webkit-slider-runnable-track {
+    background: transparent;
+    border-radius: 10px;
+}
+
+#emotion-range::-moz-range-track,
+#final-range::-moz-range-track {
+    background: transparent;
+    border-radius: 10px;
+}
+
+/* Style cho cái nút kéo (thumb) cho đẹp hơn */
+#emotion-range::-webkit-slider-thumb,
+#final-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #fff; 
+    border: 4px solid #00bcd4; 
+    cursor: pointer;
+    margin-top: -5px; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
+}
+
+#emotion-range::-moz-range-thumb,
+#final-range::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #fff;
+    border: 4px solid #00bcd4;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    border: none; 
+}
+
+.btn-history {
+    background-color: #00897b;
+    color: white;
+    border: none;              
+    padding: 12px 24px;
+    border-radius: 50px;      
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+    width: 100%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease; 
+}
+
+/* Hiệu ứng khi rê chuột vào */
+.btn-history:hover {
+    background-color: #00796b;
+    transform: scale(1.02);    
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+/* --- CẤU HÌNH CHUNG --- */
+html, body {
+    width: 100%; height: 100%;
+    margin: 0; padding: 0;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none; -webkit-user-select: none;
+    transition: background 1.5s ease;
+}
+.hair-tone { 
+    fill: #5D4037; 
+}
+
+.stage {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease;
+    display: none;
+}
+
+.stage.active {
+    opacity: 1;
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- CANVAS PHÁO HOA --- */
+#fireworks-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+#back-btn {
+    position: fixed;       
+    top: 20px;
+    left: 20px;
+    z-index: 9999;            
+    
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.6); 
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    
+    border: 1px solid rgba(0, 105, 92, 0.3);
+    border-radius: 20px;
+    color: #00695c;            
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    
+    display: none;             
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+#back-btn:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: scale(1.05);
+}
+
+#back-btn:active {
+    transform: scale(0.95);
+}
+
+/* --- STAGE 0: WELCOME --- */
+#stage-0 .welcome-container {
+    text-align: center;
+    width: 90%; max-width: 400px;
+    background: rgba(255, 255, 255, 0.85);
+    padding: 40px 20px;
+    border-radius: 30px;
+    box-shadow: 0 10px 30px rgba(233, 30, 99, 0.1);
+    animation: fadeIn 1s;
+}
+#stage-0 h1 { font-size: 32px; margin-bottom: 10px; color: #d81b60; margin-top: 0; }
+#stage-0 .welcome-sub { font-size: 18px; line-height: 1.5; margin-bottom: 30px; color: #8d6e63; }
+#username-input {
+    width: 100%; padding: 15px; font-size: 18px;
+    border: 2px solid #ffcc80; border-radius: 25px;
+    outline: none; text-align: center; box-sizing: border-box;
+    margin-bottom: 25px; background: #fff; color: #d81b60;
+    transition: border-color 0.3s; -webkit-appearance: none;
+}
+#username-input:focus { border-color: #d81b60; }
+.btn-start {
+    padding: 15px 40px; background-color: #ec407a; color: white;
+    border: none; border-radius: 30px; font-size: 18px; font-weight: bold;
+    cursor: pointer; box-shadow: 0 5px 15px rgba(236, 64, 122, 0.3);
+    transition: transform 0.2s; -webkit-appearance: none;
+}
+.btn-start:active { transform: scale(0.95); }
+
+/* --- STAGE 1: STOP MONKEY --- */
+#stage-1 { display: block; } 
+#greeting-text {
+    position: absolute;
+    top: 12%;    
+    left: 50%; 
+    transform: translateX(-50%); 
+    width: 95%;
+    text-align: center;
+    
+    font-size: 32px;          
+    font-weight: 800;          
+    color: #1b5e20;           
+    z-index: 20;
+    
+    
+    text-shadow: 0 2px 10px rgba(255, 255, 255, 0.8);
+    
+    animation: floatUp 1s ease-out;
+}
+#stage-1 .garden-scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
+#stage-1 .fountain { position: absolute; top: -5%; left: 50%; transform: translate(-50%, -50%); font-size: 100px; opacity: 0.8; z-index: 5; transition: opacity 1s; }
+
+#monkey-metaphor {
+    position: absolute;
+    top: 28%;
+    left: 50%;
+    transform: translateX(-50%); 
+    width: 90%;
+    text-align: center;
+    
+    font-size: 20px;          
+    font-weight: 600;
+    color: #2e7d32;           
+    line-height: 1.5;
+    z-index: 15;
+    text-shadow: 0 1px 5px rgba(255, 255, 255, 0.6);
+    transition: opacity 0.5s ease;
+}
+.monkey.vanishing {
+
+    opacity: 0 !important;      
+    transition: opacity 3s linear, filter 3s linear;  
+
+    animation-play-state: paused !important; 
+
+    filter: blur(2px);
+    transform: scale(0.9);
+}
+
+#stage-1 #top-message-area { position: absolute; top: 9%; left: 0; width: 100%; text-align: center; z-index: 150; pointer-events: none; }
+#stage-1 .safe-quote { font-size: 35px; font-weight: bold; color: #00695c; line-height: 1.6; margin-top: 40px; margin-left: 50px; margin-right: 50px; text-shadow: 2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff, 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff,0 0 10px rgba(255, 255, 255, 0.8); animation: floatUp 1.5s ease-out; }
+#stage-1 #controls-container { position: absolute; bottom: 50px; left: 0; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; z-index: 100; }
+#stage-1 #countdown-display { 
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    z-index: 200; 
+    text-align: center;
+    width: 100%;
+    pointer-events: none;
+    height: auto; 
+}
+#stage-1 .count-number { 
+    font-size: 100px; /* Tăng kích thước số lên rất to */
+    color: #d84315; 
+    font-weight: 900; 
+    text-shadow: 4px 4px 0 white, 0 0 20px rgba(255,255,255,0.5); 
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+}
+.quiet-text {
+    font-size: 40px; /* Chữ to theo yêu cầu */
+    font-weight: 800;
+    color: #00695c;
+    text-shadow: 
+        2px 2px 0 #fff, 
+        0 0 30px rgba(255, 255, 255, 0.9);
+        animation: fadeIn 1s ease-out forwards;
+}
+#stage-1 #stop-btn { width: 100px; height: 100px; border-radius: 50%; background-color: #ff5722; border: 5px solid white; color: white; font-size: 40px; cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.3); transition: transform 0.1s, background 0.3s; display: flex; align-items: center; justify-content: center; -webkit-appearance: none; outline: none; }
+#stage-1 #stop-btn:active { transform: scale(0.92); background-color: #d84315; }
+#stage-1 #guide-text-s1 { color: #1b5e20; font-size: 16px; margin-top: 15px; text-align: center; max-width: 80%; min-height: 40px; font-weight: 500; }
+#stage-1 #success-panel { display: none; flex-direction: column; align-items: center; text-align: center; padding: 0 20px; animation: fadeIn 1s; }
+#stage-1 .congrats-text { color: #2e7d32; font-size: 18px; margin-bottom: 20px; line-height: 1.5; background: rgba(255,255,255,0.7); padding: 15px; border-radius: 15px; }
+#stage-1 .next-btn { padding: 12px 35px; background: #00897b; color: white; border: none; border-radius: 30px; font-size: 18px; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.2); cursor: pointer; animation: pulseBtn 2s infinite; }
+#stage-1 .monkey { position: absolute; font-size: 32px; z-index: 20; will-change: transform; }
+#stage-1 .running { animation: chaoticJump 2.5s infinite ease-in-out alternate; }
+#stage-1 .fade-out { transition: opacity 1.5s, transform 1.5s; opacity: 0; transform: scale(0); }
+
+/* --- STAGE 2: DRAGON --- */
+#stage-2 #instruction-dragon { position: absolute; top: 10%; width: 100%; font-size: 24px; color: #006064; text-align: center; font-weight: bold; transition: color 0.3s; z-index: 20; }
+#stage-2 .game-scene { display: flex; align-items: center; justify-content: center; gap: 40px; transform: scale(0.95); margin-top: -50px; }
+#stage-2 .dragon-container { position: relative; width: 150px; height: 180px; }
+#stage-2 .head { position: absolute; top: 0; left: 20px; width: 95px; height: 85px; background-color: #66bb6a; border-radius: 45px 45px 25px 25px; z-index: 5; box-shadow: inset -5px -5px 10px rgba(0,0,0,0.1); }
+#stage-2 .eye { position: absolute; top: 35px; left: 55px; width: 14px; height: 8px; border-top: 3px solid #333; border-radius: 50% 50% 0 0; background: transparent; z-index: 6; }
+#stage-2 .cheek { position: absolute; top: 48px; left: 58px; width: 14px; height: 8px; background-color: #ff8a80; border-radius: 50%; opacity: 0.6; z-index: 6; }
+#stage-2 .mouth { position: absolute; top: 58px; left: 65px; z-index: 6; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+#stage-2 .mouth.smile { width: 20px; height: 10px; background: transparent; border-bottom: 3px solid #333; border-radius: 0 0 50% 50%; transform: rotate(5deg); }
+#stage-2 .mouth.blowing { width: 12px; height: 12px; background: #333; border: none; border-radius: 50%; top: 55px; left: 75px; }
+#stage-2 .body { position: absolute; bottom: 0; left: 10px; width: 110px; height: 110px; background-color: #66bb6a; border-radius: 50px 50px 20px 20px; z-index: 3; }
+#stage-2 .belly { 
+    position: absolute; 
+    bottom: 10px; 
+    left: 25px; 
+    width: 80px; 
+    height: 80px; 
+    background-color: #fff176; 
+    border-radius: 50%; 
+    z-index: 4; 
+    transform-origin: center bottom; 
+    transition: transform 0.2s ease-out; /* Tăng độ mượt khi nhả ra */
+    box-shadow: inset 0 0 10px rgba(255,160,0,0.2); 
+}
+#stage-2 .belly.inhaling { transform: scale(1.25); transition: transform 3s ease-out; }
+#stage-2 .arm { position: absolute; top: 100px; width: 30px; height: 40px; background-color: #4caf50; border-radius: 20px; z-index: 5; }
+#stage-2 .arm.left { left: 0; transform: rotate(30deg); }
+#stage-2 .arm.right { right: 0; transform: rotate(-30deg); }
+#stage-2 .fire-stream { 
+    position: absolute; 
+    top: 55px; 
+    left: 85px; 
+    width: 0; 
+    height: 30px; 
+    background: linear-gradient(90deg, #ff5722, #ffeb3b, rgba(255,255,255,0)); 
+    border-radius: 50px; 
+    opacity: 0; 
+    z-index: 10; 
+    transform-origin: left center; 
+    transition: width 1.2s ease-out, opacity 0.5s;
+}
+#stage-2 .fire-stream.active { 
+    width: 180px;
+    opacity: 1;
+    animation: fireFlicker 0.1s infinite alternate; 
+}
+#stage-2 .pinwheel-wrapper { position: relative; width: 150px; height: 250px; }
+#stage-2 .pinwheel-container { position: relative; width: 160px; height: 160px; transition: transform 0.1s linear; }
+#stage-2 .blade { position: absolute; width: 80px; height: 80px; border-radius: 50% 0 50% 0; top: 50%; left: 50%; transform-origin: 0 0; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); }
+#stage-2 .b1 { transform: rotate(0deg); background-color: #ff8a80; }
+#stage-2 .b2 { transform: rotate(90deg); background-color: #80cbc4; }
+#stage-2 .b3 { transform: rotate(180deg); background-color: #90caf9; }
+#stage-2 .b4 { transform: rotate(270deg); background-color: #ce93d8; }
+#stage-2 .center-dot { position: absolute; width: 15px; height: 15px; background: #fff; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; }
+#stage-2 .stick { width: 8px; height: 160px; background-color: #8d6e63; position: absolute; top: 80px; left: 50%; transform: translateX(-50%); z-index: -1; border-radius: 4px; }
+#stage-2 #interaction-area { position: absolute; bottom: 110px; padding: 15px 50px; background-color: white; border: 3px solid #4caf50; color: #4caf50; border-radius: 50px; cursor: pointer; font-size: 18px; font-weight: bold; box-shadow: 0 6px 15px rgba(0,0,0,0.1); transition: all 0.2s; outline: none; -webkit-appearance: none; z-index: 100; }
+#stage-2 #interaction-area:active { transform: scale(0.95); background-color: #4caf50; color: white; }
+#stage-2 #next-btn-dragon { position: absolute; bottom: 40px; padding: 12px 30px; background-color: #00838f; color: white; border: none; border-radius: 30px; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: transform 0.2s; outline: none; -webkit-appearance: none; z-index: 100; }
+
+/* --- STAGE 3: BODY SCAN --- */
+#stage-3 #guide-text-body { position: absolute; top: 10%; width: 85%; text-align: center; font-size: 21px; color: #004d40; font-weight: 600; min-height: 60px; transition: opacity 0.5s; text-shadow: 1px 1px 5px rgba(255,255,255,0.8); z-index: 10; }
+#stage-3 #meditation-container { position: relative; width: 320px; height: 480px; margin-top: 30px; }
+
+/* CSS CHO SVG THAI PHỤ */
+#pregnant-standing-svg {
+    width: 100%; height: 100%;
+    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
+}
+.dress-shape { fill: #F8BBD0; } /* Váy hồng */
+.skin-tone { fill: #FFCCBC; }
+.hair-tone { fill: #5D4037; }
+.facial-features { fill: none; stroke: #5D4037; stroke-width: 2; stroke-linecap: round; }
+.heart-pattern { fill: #E53935; opacity: 0.8; } /* Trái tim đỏ trên váy */
+
+#stage-3 .dot { position: absolute; width: 26px; height: 26px; border-radius: 50%; cursor: pointer; transform: translate(-50%, -50%); transition: all 0.5s ease; box-shadow: 0 0 10px rgba(0,0,0,0.2); z-index: 5; display: none; }
+#stage-3 .dot.active { display: block; background-color: #e57373; border: 3px solid white; animation: pulse-red 1.8s infinite ease-in-out; }
+#stage-3 .dot.relaxed { display: block; background-color: #4db6ac; box-shadow: 0 0 20px #4db6ac; border: 2px solid #b2dfdb; animation: none; pointer-events: none; }
+#stage-3 .ripple { position: absolute; width: 20px; height: 20px; border-radius: 50%; background: rgba(77, 182, 172, 0.6); transform: translate(-50%, -50%); pointer-events: none; animation: ripple-effect 1.2s ease-out forwards; }
+#stage-3 #action-buttons-body { display: none; flex-direction: column; align-items: center; gap: 15px; margin-top: 20px; width: 100%; animation: fadeInUp 1s ease; z-index: 20; }
+#stage-3 button { padding: 12px 30px; border-radius: 30px; font-size: 16px; font-weight: 600; cursor: pointer; width: 240px; border: none; transition: transform 0.2s; -webkit-appearance: none; }
+#stage-3 #continue-btn-body { background-color: #00796b; color: white; box-shadow: 0 4px 10px rgba(0, 121, 107, 0.4); }
+#stage-3 #restart-btn-body { background-color: rgba(255, 255, 255, 0.6); color: #004d40; border: 1px solid #004d40; }
+
+/* --- STAGE 4: CAPYBARA CHECK-IN --- */
+#stage-4 #selection-screen { text-align: center; transition: opacity 0.5s ease-out; width: 95%; max-width: 800px; }
+#stage-4 h2 { font-size: 22px; margin-bottom: 5px; color: #ef6c00; }
+#stage-4 .subtitle { font-size: 15px; color: #795548; margin-bottom: 20px; font-style: italic; }
+#stage-4 .emotion-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; padding: 10px; }
+#stage-4 .capy-card { background: white; border-radius: 20px; padding: 0; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; border: 3px solid transparent; height: auto; aspect-ratio: 1; overflow: hidden; }
+#stage-4 .capy-card:active { transform: scale(0.95); border-color: #ffcc80; }
+#stage-4 .capy-img { width: 100%; height: 100%; max-width: none; max-height: none; object-fit: cover; margin-bottom: 0; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.1)); pointer-events: none; }
+#stage-4 #feedback-screen { display: none; text-align: center; opacity: 0; transition: opacity 1s ease-in; padding: 30px; background: rgba(255, 255, 255, 0.95); border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); max-width: 80%; }
+#stage-4 .feedback-text { font-size: 20px; line-height: 1.5; color: #00695c; margin-bottom: 20px; }
+#stage-4 .btn-next-capy { padding: 12px 30px; background-color: #ef6c00; color: white; border: none; border-radius: 25px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(239, 108, 0, 0.3); transition: transform 0.2s; }
+@media (max-width: 400px) { #stage-4 .emotion-grid { grid-template-columns: repeat(2, 1fr); } }
+
+/* --- STAGE 5: CLOUDS --- */
+#stage-5 .sun { position: absolute; top: 40px; right: 40px; width: 70px; height: 70px; background: #FFD700; border-radius: 50%; box-shadow: 0 0 50px #FFD700; opacity: 0.9; }
+#stage-5 #input-container-cloud { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 100; text-align: center; transition: all 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55); background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); width: 85%; max-width: 400px; opacity: 1; pointer-events: auto; }
+#stage-5 #input-container-cloud.hidden { opacity: 0; pointer-events: none; bottom: -300px; transform: translateX(-50%) scale(0.8); }
+#stage-5 h2 { color: #00838F; margin-top: 0; margin-bottom: 10px; font-size: 22px; font-weight: 700; }
+#stage-5 p { color: #555; font-size: 15px; line-height: 1.5; margin-bottom: 20px; }
+#stage-5 input[type="text"] { padding: 12px; width: 100%; box-sizing: border-box; border: 2px solid #B2EBF2; border-radius: 12px; font-size: 16px; outline: none; margin-bottom: 15px; background: #fff; -webkit-appearance: none; }
+#stage-5 input::placeholder { font-style: italic; color: #90A4AE; opacity: 0.8; }
+#stage-5 .btn-primary { width: 100%; padding: 12px 0; background-color: #00BCD4; color: white; border: none; border-radius: 25px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); -webkit-appearance: none; margin-bottom: 10px; }
+#stage-5 .btn-secondary { width: 100%; padding: 10px 0; background-color: transparent; color: #00838F; border: 2px solid #B2EBF2; border-radius: 25px; font-size: 15px; font-weight: 600; cursor: pointer; -webkit-appearance: none; }
+#stage-5 #hint-text-cloud { position: absolute; bottom: 15%; width: 100%; text-align: center; color: #006064; font-size: 20px; font-weight: 600; opacity: 0; transition: opacity 1s; pointer-events: none; text-shadow: 0 0 10px white; animation: pulse 2s infinite; padding: 0 20px; box-sizing: border-box; }
+#stage-5 #hint-text-cloud.show { opacity: 0.8; }
+#stage-5 .cloud-wrapper { position: absolute; left: 50%; top: 40%; transform: translate(-50%, -50%); pointer-events: none; z-index: 50; }
+#stage-5 .cloud-body { --cloud-color: #fff; background: var(--cloud-color); display: inline-block; min-width: 120px; max-width: 250px; padding: 15px 25px; border-radius: 50px; position: relative; color: #444; font-size: 16px; line-height: 1.4; text-align: center; box-shadow: 0 8px 15px rgba(0,0,0,0.1); word-wrap: break-word; white-space: normal; }
+#stage-5 .cloud-body::before, #stage-5 .cloud-body::after { content: ''; background: var(--cloud-color); position: absolute; border-radius: 50%; z-index: -1; }
+#stage-5 .cloud-body::before { width: 50px; height: 50px; top: -20px; left: 15px; }
+#stage-5 .cloud-body::after { width: 60px; height: 60px; top: -30px; right: 15px; }
+#stage-5 .flying-right { animation: meanderRight 20s linear forwards; }
+#stage-5 .flying-left { animation: meanderLeft 22s linear forwards; }
+
+/* --- STAGE 6: JAR --- */
+#stage-6 {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%; height: 100%;
+}
+#stage-6.active { display: flex; }
+
+/* Màn hình giới thiệu (Giữ nguyên) */
+#stage-6 #intro-screen-jar { text-align: center; padding: 20px; transition: opacity 0.5s; }
+#stage-6 .instruction-text { font-size: 20px; line-height: 1.6; margin-bottom: 30px; max-width: 500px; color: #880e4f; }
+#stage-6 .mantra { font-size: 22px; font-weight: bold; color: #d81b60; margin: 20px 0; font-style: italic; animation: glow 2s infinite alternate; }
+
+/* Màn hình viết lời nhắn */
+#stage-6 #write-screen-jar { 
+    display: none; 
+    flex-direction: column; 
+    align-items: center; 
+    opacity: 0; 
+    transition: opacity 1s; 
+    width: 100%; /* Đảm bảo căn giữa */
+}
+
+/* --- TRÁI TIM (ĐÃ THU NHỎ) --- */
+.heart-note {
+    position: relative;
+    width: 200px;  /* Giảm kích thước xuống 200px cho vừa vặn */
+    height: 200px;
+    background-color: #ffcdd2;
+    transform: rotate(-45deg);
+    
+    /* Tăng margin-top để không che mất chữ bên trên */
+    margin: 100px auto 60px auto; 
+    
+    box-shadow: 5px 5px 20px rgba(233, 30, 99, 0.2);
+    animation: floatHeart 3s ease-in-out infinite;
+    z-index: 10;
+}
+
+.heart-note::before,
+.heart-note::after {
+    content: "";
+    position: absolute;
+    width: 200px; /* Kích thước bằng khung chính */
+    height: 200px;
+    background-color: #ffcdd2;
+    border-radius: 50%;
+}
+
+.heart-note::before {
+    top: -100px; /* Bằng 1/2 chiều cao (200/2) */
+    left: 0;
+}
+
+.heart-note::after {
+    left: 100px; /* Bằng 1/2 chiều rộng (200/2) */
+    top: 0;
+}
+
+/* Ô nhập liệu bên trong trái tim */
+#stage-6 textarea {
+    position: absolute;
+    top: 50%; left: 50%;
+    
+    /* Xoay ngược 45 độ để chữ nằm ngang thẳng hàng */
+    transform: translate(-50%, -50%) rotate(45deg); 
+    z-index: 15;
+    
+    width: 160px; /* Vừa vặn trong lòng tim */
+    height: 120px;
+    
+    background: transparent;
+    border: none; outline: none;
+    text-align: center;
+    font-family: 'Nunito', cursive, sans-serif;
+    font-size: 18px; 
+    color: #c2185b;
+    resize: none;
+}
+
+#stage-6 textarea::placeholder {
+    color: #ef9a9a;
+    font-style: italic;
+    font-size: 16px;
+}
+
+/* Nút cất vào hũ */
+#stage-6 .btn {
+    /* Kích thước và Font chữ */
+    padding: 15px 40px;
+    font-size: 18px;
+    font-weight: bold;
+    
+    /* Màu sắc Gradient chuẩn (Hồng đậm dần) */
+    background: linear-gradient(45deg, #ec407a, #d81b60);
+    color: white;
+    
+    /* Bo tròn và viền */
+    border: none;
+    border-radius: 30px; /* Bo tròn hình viên thuốc */
+    
+    /* Hiệu ứng và Con trỏ */
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(233, 30, 99, 0.3); /* Bóng đổ màu hồng */
+    transition: all 0.2s ease; /* Chuyển động mượt mà */
+    
+    /* Căn chỉnh vị trí */
+    margin-top: 30px; /* Cách xa trái tim ra một chút cho thoáng */
+    position: relative;
+    z-index: 20; /* Đảm bảo nút nổi lên trên cùng */
+    outline: none;
+    -webkit-appearance: none;
+}
+
+/* Hiệu ứng khi di chuột vào (Hover) */
+#stage-6 .btn:hover {
+    transform: translateY(-3px); /* Nổi lên nhẹ */
+    box-shadow: 0 8px 25px rgba(233, 30, 99, 0.5); /* Bóng đậm hơn */
+}
+
+/* Hiệu ứng khi bấm xuống (Active) */
+#stage-6 .btn:active {
+    transform: scale(0.95); /* Thu nhỏ lại một chút tạo cảm giác bấm thật */
+    box-shadow: 0 2px 5px rgba(233, 30, 99, 0.3);
+}
+
+/* Các phần khác giữ nguyên (Hũ, tim bay...) */
+#stage-6 #jar-screen-final { display: none; position: relative; width: 100%; height: 100%; align-items: center; justify-content: center; }
+#stage-6 .jar { position: relative; width: 200px; height: 280px; background: rgba(255, 255, 255, 0.3); border: 4px solid #fff; border-radius: 20px 20px 50px 50px; box-shadow: 0 0 20px rgba(255,255,255,0.5); overflow: hidden; display: flex; align-items: flex-end; justify-content: center; z-index: 5; backdrop-filter: blur(5px); }
+#stage-6 .jar::before { content: ''; position: absolute; top: -15px; left: 10px; right: 10px; height: 15px; background: #fff; border-radius: 5px; }
+#stage-6 .small-heart { position: absolute; width: 40px; height: 40px; background-color: #e91e63; transform: rotate(-45deg); opacity: 0.9; }
+#stage-6 .small-heart::before, #stage-6 .small-heart::after { content: ""; position: absolute; width: 40px; height: 40px; background-color: #e91e63; border-radius: 50%; }
+#stage-6 .small-heart::before { top: -20px; left: 0; }
+#stage-6 .small-heart::after { left: 20px; top: 0; }
+#stage-6 #final-message { position: absolute; bottom: 12%; font-size: 20px; color: #880e4f; text-align: center; opacity: 0; font-weight: bold; transition: opacity 2s; width: 90%; z-index: 20; }
+#stage-6 #continue-btn-jar { position: absolute; bottom: 3%; background-color: #ad1457; display: none; opacity: 0; transition: opacity 1s; z-index: 20; }
+
+/* ANIMATIONS CHUNG */
+@keyframes chaoticJump { 0% { transform: translate(0, 0) rotate(0deg); } 20% { transform: translate(60px, -70px) rotate(15deg); } 40% { transform: translate(-50px, 50px) rotate(-12deg); } 60% { transform: translate(70px, -30px) rotate(8deg); } 80% { transform: translate(-40px, -60px) rotate(-10deg); } 100% { transform: translate(0, 0) rotate(0deg); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes popIn { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes pulseBtn { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+@keyframes floatUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse-red { 0% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 0 0 rgba(229, 115, 115, 0.7); } 70% { transform: translate(-50%, -50%) scale(1.2); box-shadow: 0 0 0 15px rgba(229, 115, 115, 0); } 100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 0 0 rgba(229, 115, 115, 0); } }
+@keyframes ripple-effect { 0% { width: 20px; height: 20px; opacity: 0.8; } 100% { width: 250px; height: 250px; opacity: 0; } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes shootFire { 0% { width: 0; opacity: 0.8; } 20% { width: 160px; opacity: 1; } 100% { width: 180px; opacity: 0; } }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+@keyframes meanderRight { 0% { transform: translate(-50%, -50%) scale(0.1); opacity: 0; } 10% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 100% { transform: translate(120vw, -50px); opacity: 0; } }
+@keyframes meanderLeft { 0% { transform: translate(-50%, -50%) scale(0.1); opacity: 0; } 10% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 100% { transform: translate(-120vw, 50px); opacity: 0; } }
+@keyframes glow { from { text-shadow: 0 0 5px rgba(216, 27, 96, 0.2); } to { text-shadow: 0 0 15px rgba(216, 27, 96, 0.6); } }
+@keyframes floatHeart { 0%, 100% { transform: rotate(-45deg) translate(0, 0); } 50% { transform: rotate(-45deg) translate(-10px, 10px); } }
+@keyframes flyToJar { 0% { top: 30%; left: 50%; transform: translate(-50%, -50%) scale(3) rotate(-45deg); opacity: 1; } 100% { top: 70%; left: 50%; transform: translate(-50%, -50%) scale(0.5) rotate(-45deg); opacity: 0.8; } }
+@keyframes fireFlicker { 
+    0% { transform: scaleY(1) scaleX(1); opacity: 0.9; } 
+    100% { transform: scaleY(1.1) scaleX(1.02); opacity: 1; } 
+}
+
+
+/* Thêm hiệu ứng viền sáng nhẹ cho ngôi sao */
+.glowing-star {
+    display: inline-block; /* Để animation hoạt động mượt mà */
+    /* text-shadow: offset-x offset-y blur-radius color */
+    /* Tạo 3 lớp bóng mờ để hiệu ứng trông tự nhiên hơn */
+    text-shadow: 
+        0 0 5px #ffd700,  /* Lớp trong cùng, sắc nét nhất */
+        0 0 10px #ffb300, /* Lớp giữa, mờ hơn */
+        0 0 15px #ff8c00; /* Lớp ngoài cùng, mờ nhất và lan tỏa nhẹ */
+    
+    /* Tùy chọn: Thêm hiệu ứng nhấp nháy nhẹ để sinh động hơn */
+    animation: softGlowPulse 2s infinite alternate ease-in-out;
+}
+
+/* Định nghĩa chuyển động nhấp nháy */
+@keyframes softGlowPulse {
+    from {
+        text-shadow: 
+            0 0 5px #ffd700,
+            0 0 10px #ffb300,
+            0 0 15px #ff8c00;
+        transform: scale(1);
+    }
+    to {
+        text-shadow: 
+            0 0 10px #ffd700,
+            0 0 20px #ffb300,
+            0 0 25px #ff8c00;
+        transform: scale(1.1); /* Phóng to nhẹ */
+    }
+}
+
+
+
+#stage-1 .safe-quote {
+    text-shadow: 
+        0 0 5px rgb(255, 255, 255), 
+        0 0 20px rgba(255, 255, 255, 0.6);
+    animation: floatUp 1.5s ease-out;
+}
+
+.falling-heart {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background-color: #ec407a;
+    top: 20%; /* Vị trí bắt đầu (trùng chỗ viết lời nhắn) */
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    z-index: 100; /* Nổi lên trên cùng */
+    
+    /* Tạo hình trái tim */
+}
+.falling-heart::before, .falling-heart::after {
+    content: "";
+    position: absolute;
+    width: 60px; height: 60px;
+    background-color: #ec407a;
+    border-radius: 50%;
+}
+.falling-heart::before { top: -30px; left: 0; }
+.falling-heart::after { left: 30px; top: 0; }
+
+/* 2. Animation Rơi */
+.animate-drop {
+    animation: dropIntoJar 1.5s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards;
+}
+
+@keyframes dropIntoJar {
+    0% {
+        top: 20%;
+        opacity: 1;
+        transform: translate(-50%, -50%) rotate(-45deg) scale(1);
+    }
+    60% {
+        /* Rơi xuống miệng hũ */
+        top: 60%;
+        transform: translate(-50%, -50%) rotate(-45deg) scale(0.5);
+        opacity: 1;
+    }
+    100% {
+        /* Chui vào trong hũ và biến mất */
+        top: 75%;
+        transform: translate(-50%, -50%) rotate(-45deg) scale(0.3);
+        opacity: 0; 
+    }
+}
+
+/* 3. Trái tim đã nằm trong hũ (Tĩnh) */
+.heart-in-jar {
+    position: absolute;
+    width: 30px; height: 30px;
+    background-color: #e91e63;
+    transform: rotate(-45deg);
+    bottom: 20px;
+    left: 50%;
+    margin-left: -15px; /* Căn giữa */
+    animation: popIn 0.5s ease-out;
+}
+.heart-in-jar::before, .heart-in-jar::after {
+    content: ""; position: absolute;
+    width: 30px; height: 30px;
+    background-color: #e91e63; border-radius: 50%;
+}
+.heart-in-jar::before { top: -15px; left: 0; }
+.heart-in-jar::after { left: 15px; top: 0; }
+
+#emotion-range, #final-range {
+    -webkit-appearance: none; /* Tắt kiểu mặc định của trình duyệt */
+    width: 100%;
+    height: 15px;
+    border-radius: 10px;
+    outline: none;
+    /* background sẽ được set trong HTML */
+}
+
+/* Làm cho đường chạy (track) trong suốt để thấy background gradient */
+#emotion-range::-webkit-slider-runnable-track,
+#final-range::-webkit-slider-runnable-track {
+    background: transparent;
+    border-radius: 10px;
+}
+
+#emotion-range::-moz-range-track,
+#final-range::-moz-range-track {
+    background: transparent;
+    border-radius: 10px;
+}
+
+/* Style cho cái nút kéo (thumb) cho đẹp hơn */
+#emotion-range::-webkit-slider-thumb,
+#final-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #fff; 
+    border: 4px solid #00bcd4; 
+    cursor: pointer;
+    margin-top: -5px; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
+}
+
+#emotion-range::-moz-range-thumb,
+#final-range::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #fff;
+    border: 4px solid #00bcd4;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    border: none; 
+}
+
+.btn-history {
+    background-color: #00897b;
+    color: white;
+    border: none;              
+    padding: 12px 24px;
+    border-radius: 50px;      
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+    width: 100%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease; 
+}
+
+/* Hiệu ứng khi rê chuột vào */
+.btn-history:hover {
+    background-color: #00796b;
+    transform: scale(1.02);    
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+/* =========================================
+   SỬA LỖI: ÉP CĂN GIỮA TOÀN BỘ CÁC MÀN HÌNH
+   ========================================= */
+
+/* 1. Ép màn hình 1 (Khỉ) tuân thủ luật căn giữa */
+#stage-1 { display: none; }
+#stage-1.active { display: flex !important; }
+
+/* 2. Màn hình 2 (Rồng): Bỏ ghim cứng chữ và nút, tạo khoảng cách tự nhiên */
+#stage-2 { gap: 15px !important; }
+#stage-2 #instruction-dragon { 
+    position: relative !important; 
+    top: auto !important; 
+    margin-bottom: 20px; 
+}
+#stage-2 #interaction-area, 
+#stage-2 #next-btn-dragon { 
+    position: relative !important; 
+    bottom: auto !important; 
+    margin-top: 10px; 
+}
+
+/* 3. Màn hình 3 (Body Scan cũ & mới): Bỏ ghim cứng dòng chữ hướng dẫn */
+#stage-3 #guide-text-body { 
+    position: relative !important; 
+    top: auto !important; 
+    margin-bottom: 30px; 
+}
+
+/* 4. Màn hình 5 (Đám mây): Mang hộp nhập liệu từ dưới đáy lên ngay chính giữa màn hình */
+#stage-5 #input-container-cloud { 
+    top: 50% !important; 
+    bottom: auto !important; 
+    transform: translate(-50%, -50%) !important; 
+}
+/* Hiệu ứng ẩn hộp nhập đám mây bay xuống dưới */
+#stage-5 #input-container-cloud.hidden { 
+    top: 150% !important; 
+    transform: translate(-50%, 0) scale(0.8) !important; 
+}
+/* =========================================
+   SỬA LỖI: ÉP CĂN GIỮA VÀ BỎ GHIM CỨNG
+   ========================================= */
+
+/* Ép các stage luôn dùng flex để tuân thủ luật căn giữa */
+.stage { display: none !important; }
+.stage.active { display: flex !important; }
+
+/* Màn hình Rồng: Gỡ ghim tuyệt đối, cho khoảng cách tự nhiên */
+#stage-2 { gap: 20px !important; }
+#stage-2 #instruction-dragon { position: relative !important; top: 0 !important; margin-bottom: 20px; }
+#stage-2 #interaction-area, #stage-2 #next-btn-dragon { position: relative !important; bottom: 0 !important; margin-top: 10px; }
+
+/* Màn hình Body Scan: Gỡ ghim chữ hướng dẫn */
+#stage-3 #guide-text-body { position: relative !important; top: 0 !important; margin-bottom: 30px; }
+
+
+
+
+
+/* ========== USEFULNESS EVAL SLIDERS ========== */
+.sat-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 10px;
+    border-radius: 8px;
+    outline: none;
+    cursor: pointer;
+}
+
+.sat-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid #d81b60;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    cursor: pointer;
+}
+
+.sat-slider::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid #d81b60;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    cursor: pointer;
+}
+
+
+/* 2. Ép giao diện iPad tràn nền, nội dung gom gọn ở giữa */
+@media (min-width: 768px) {
+    .stage.active {
+        width: 100% !important;
+        max-width: 600px !important; /* MỞ RỘNG KHUNG TỪ 500px -> 600px ĐỂ CHỮ THOẢI MÁI GIÃN RA */
+        height: 100% !important; 
+        top: 0 !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important; 
+        
+        /* Nền trong suốt tràn viền */
+        background-color: transparent !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        box-shadow: none !important;
+        border: none !important;
+        border-radius: 0 !important;
+    }
+}
+
+@media (min-width: 768px) {
+    /* 1. Dồn các phần tử vào giữa màn hình */
+    #stage-1 #top-message-area {
+        top: 20% !important; /* Đẩy câu nói xuống gần giữa hơn */
+    }
+    
+    #stage-1 #controls-container {
+        bottom: 22% !important; /* Kéo đài phun nước và nút lên gần giữa hơn */
+    }
+
+    /* 2. Phóng to các chi tiết ("bự ra 1 xí") */
+    #stage-1 .safe-quote {
+        font-size: 40px !important; /* Thu nhỏ 1 xíu để đủ chỗ cho chữ "toàn." */
+        width: 100% !important; /* Cho phép chữ giãn hết cỡ ra 2 mép màn hình */
+        max-width: 600px !important;
+        margin: 0 auto !important; 
+        padding: 0 10px !important; /* Ép lề nhỏ lại để chữ có không gian bơi lội */
+        line-height: 1.5 !important;
+        box-sizing: border-box !important;
+    }
+
+    #stage-1 .fountain {
+        font-size: 150px !important; /* Đài phun nước bự ra */
+        margin-bottom: 25px !important;
+    }
+
+    #stage-1 .congrats-text {
+        font-size: 20px !important; /* Chữ chúc mừng to rõ hơn */
+        padding: 20px 30px !important;
+        border-radius: 20px !important;
+    }
+
+    #stage-1 .next-btn {
+        font-size: 22px !important; /* Nút Tiếp tục bự ra */
+        padding: 16px 50px !important;
+        margin-top: 15px !important;
+    }
+}  
+
+
+@media (min-width: 768px) {
+    
+    /* 1. Tiêu đề chính (Giảm từ 45px -> 30px) */
+    #stage-pain-map h2 {
+        font-size: 30px !important; 
+        margin-bottom: 15px !important;
+    }
+
+    /* 2. Câu hướng dẫn (Giảm từ 24px -> 16px) */
+    #stage-pain-map p {
+        font-size: 16px !important; 
+        margin-bottom: 50px !important; /* Thu hẹp lại để không bị trống */
+    }
+
+    /* 3. Nhân vật và Chấm mỏi (Giảm scale từ 1.7 -> 1.2) */
+    #stage-pain-map #pain-map-svg-container {
+        transform: scale(1.2) !important; /* To lên 1.2 lần thay vì 1.7 lần */
+        transform-origin: top center !important; 
+        margin-bottom: 120px !important; /* Rút ngắn khoảng cách thừa bên dưới để nút xích lên */
+    }
+
+    /* 4. Nút "Chuyển sang Thư giãn" (Giảm từ 28px -> 18px, thu nhỏ đệm) */
+    #stage-pain-map .btn-start {
+        font-size: 18px !important;
+        padding: 14px 40px !important;
+        border-radius: 35px !important;
+        box-shadow: 0 8px 15px rgba(211, 47, 47, 0.3) !important;
+    }
+}
+
+
+@media (min-width: 768px) {
+    
+    /* 1. Phóng to Câu hướng dẫn và đẩy nó xuống khỏi mép trên/nút Quay lại */
+    #stage-3 #guide-text-body {
+        font-size: 28px !important; 
+        margin-top: 80px !important; /* Đẩy chữ xuống thấp cho thoáng */
+        margin-bottom: 40px !important;
+        width: 90% !important;
+        line-height: 1.5 !important;
+    }
+
+    /* 2. Phóng to Nhân vật (Scale 1.2 giống hệt trang Bản đồ mỏi) */
+    #stage-3 #meditation-container {
+        transform: scale(1.2) !important; 
+        transform-origin: top center !important;
+        margin-bottom: 120px !important; /* Khoảng trống cho các nút phía dưới */
+    }
+
+    /* 3. Phóng to cụm nút bấm (Tiếp tục hành trình / Thực hành lại) */
+    #stage-3 #action-buttons-body {
+        gap: 20px !important; /* Khoảng cách giữa 2 nút rộng ra */
+    }
+    
+    #stage-3 #action-buttons-body button {
+        font-size: 18px !important;
+        padding: 16px 40px !important;
+        width: 300px !important; /* Nút dài ra cho đẹp */
+        border-radius: 35px !important;
+    }
+}
+
+#stage-4 #feedback-screen {
+    width: 95% !important; 
+    max-width: 800px !important; 
+    padding: 30px 15px !important; /* Rút bớt lề bên trong hộp để chừa không gian cho chữ duỗi thẳng */
+    box-sizing: border-box !important;
+}
+
+#stage-4 .feedback-text {
+    font-size: 22px !important; 
+    line-height: 1.6 !important;
+    margin-bottom: 30px !important; 
+    width: 100% !important;
+}
+
+#stage-4 .btn-next-capy {
+    font-size: 20px !important; 
+    padding: 15px 40px !important; 
+    border-radius: 35px !important;
+}
+
+/* 2. Riêng màn hình to (iPad) thì khung sẽ tự động to thêm và chữ bự hơn */
+@media (min-width: 768px) {
+    #stage-4 #feedback-screen {
+        padding: 50px 40px !important; 
+    }
+    
+    #stage-4 .feedback-text {
+        font-size: 25px !important; 
+    }
+    
+    #stage-4 .btn-next-capy {
+        font-size: 22px !important;
+        padding: 18px 50px !important;
+    }
+}
+
+
+@media (min-width: 768px) {
+    #stage-6 .instruction-text {
+        font-size: 28px !important; /* Chữ hướng dẫn to rõ */
+        max-width: 80% !important; /* Cho chữ dàn ngang ra 2 bên */
+        margin: 0 auto 40px auto !important; /* Căn giữa hoàn hảo */
+    }
+    
+    #stage-6 .mantra {
+        font-size: 36px !important; /* Câu chúc siêu bự */
+        margin-bottom: 60px !important; /* Đẩy khoảng cách với nút rộng ra */
+    }
+    
+    #stage-6 #intro-screen-jar button,
+    #stage-6 #connect-btn-s6 {
+        font-size: 24px !important; /* Nút to dễ bấm */
+        padding: 20px 60px !important; /* Làm nút mập ú lên */
+    }
+}
+/* ==========================================
+   VIDEO TRANSITION STAGES
+   Dán đoạn CSS này VÀO CUỐI file styles.css
+   ========================================== */
+
+/* --- Khung chứa video căn giữa màn hình --- */
+.video-stage .video-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    max-width: 560px;
+    text-align: center;
+    padding: 20px;
+}
+
+/* --- Tiêu đề phía trên video --- */
+.video-stage .video-title {
+    color: #00796b;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.6);
+}
+
+/* --- Wrapper giữ tỉ lệ 16:9 cho video responsive --- */
+.video-stage .video-wrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* Tỉ lệ 16:9 */
+    height: 0;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    background: #000; /* Nền đen khi video đang tải */
+}
+
+/* --- Iframe YouTube lấp đầy wrapper --- */
+.video-stage .video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 16px;
+}
+
+/* --- Nút "Bắt đầu thực hành" dưới video --- */
+.video-stage .video-next-btn {
+    margin-top: 25px;
+    padding: 14px 40px;
+    background-color: #00897b;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 137, 123, 0.3);
+    transition: all 0.2s ease;
+    -webkit-appearance: none;
+    outline: none;
+}
+
+/* --- Hiệu ứng hover --- */
+.video-stage .video-next-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 137, 123, 0.4);
+}
+
+/* --- Hiệu ứng nhấn --- */
+.video-stage .video-next-btn:active {
+    transform: scale(0.96);
+}
+
+/* --- Responsive iPad --- */
+@media (min-width: 768px) {
+    .video-stage .video-container {
+        max-width: 700px;
+    }
+    .video-stage .video-title {
+        font-size: 28px;
+        margin-bottom: 30px;
+    }
+    .video-stage .video-next-btn {
+        font-size: 20px;
+        padding: 16px 50px;
+        margin-top: 35px;
+    }
+}
+
+
+/* --- PATCH: STAGE 2 - BẮT BUỘC ĐỦ 3 NHỊP THỞ --- */
+#stage-2 #next-btn-dragon:disabled,
+#stage-2 #next-btn-dragon.locked {
+    background-color: #b0bec5 !important;
+    color: #ffffff !important;
+    cursor: not-allowed !important;
+    opacity: 0.75 !important;
+    box-shadow: none !important;
+    animation: none !important;
+}
+
+#stage-2 #next-btn-dragon:not(:disabled) {
+    background-color: #00838f !important;
+    cursor: pointer !important;
+    opacity: 1 !important;
+}
+
+/* --- PATCH: ĐÁNH GIÁ 7 STAGE DẠNG TICK --- */
+#stage-usefulness.active {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.usefulness-container {
+    width: 90%;
+    max-width: 540px;
+    max-height: 90vh;
+    overflow-y: auto;
+    margin: 0 auto;
+    padding: 22px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.96);
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    box-sizing: border-box;
+}
+
+.usefulness-container h2 {
+    color: #004d40;
+    font-weight: 900;
+    margin: 0 0 6px;
+}
+
+.usefulness-intro {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0 0 16px;
+}
+
+#stage-usefulness .stage-rating-block {
+    background: #f5f5f5;
+    border: 2px solid transparent;
+    padding: 12px 14px;
+    border-radius: 16px;
+    margin-bottom: 10px;
+    text-align: left;
+    transition: all 0.2s ease;
+}
+
+#stage-usefulness .stage-rating-block.checked {
+    background: #e0f2f1;
+    border-color: #26a69a;
+}
+
+.stage-tick-row {
+    display: grid;
+    grid-template-columns: 32px 1fr auto;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    color: #004d40;
+}
+
+.stage-useful-checkbox {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.custom-check {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid #80cbc4;
+    background: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+.stage-useful-checkbox:checked + .custom-check {
+    background: #00897b;
+    border-color: #00897b;
+}
+
+.stage-useful-checkbox:checked + .custom-check::after {
+    content: '✓';
+    color: white;
+    font-size: 18px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.stage-title {
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.tick-status {
+    font-size: 12px;
+    font-weight: 700;
+    color: #78909c;
+    white-space: nowrap;
+}
+
+.stage-rating-block.checked .tick-status {
+    color: #00796b;
+}
+
+.evaluation-note-block {
+    background: #f5f5f5;
+    padding: 12px 15px;
+    border-radius: 16px;
+    margin: 14px 0 16px;
+    text-align: left;
+}
+
+.evaluation-note-title {
+    font-size: 14px;
+    font-weight: 900;
+    color: #00796b;
+    margin-bottom: 8px;
+}
+
+#evaluation-note {
+    width: 100%;
+    min-height: 95px;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    resize: vertical;
+    outline: none;
+    box-sizing: border-box;
+    font-family: inherit;
+    background: white;
+}
+
+#finish-eval-btn {
+    background: #d81b60;
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    border-radius: 30px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    box-shadow: 0 5px 14px rgba(216, 27, 96, 0.25);
+}
+
+#finish-eval-btn:active {
+    transform: scale(0.98);
+}
+
+@media (max-width: 420px) {
+    .stage-tick-row {
+        grid-template-columns: 30px 1fr;
+    }
+    .tick-status {
+        grid-column: 2;
+        margin-top: -4px;
+    }
+}
+
+
+/* --- PATCH: STAGE 2 - BẤM ĐỂ THỞ RA / BẤM LẠI ĐỂ DỪNG --- */
+#stage-2 #interaction-area.blowing {
+    background-color: #ff5722 !important;
+    border-color: #ff5722 !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 18px rgba(255, 87, 34, 0.35) !important;
+}
+
+#stage-2 #interaction-area.blowing:active {
+    background-color: #d84315 !important;
+}
+
+
+/* --- PATCH V3: STAGE 2 - NHẤN GIỮ LẤY HƠI, THẢ RA GIỮ THỞ LIÊN TỤC --- */
+#stage-2 #interaction-area.charging {
+    background-color: #4caf50 !important;
+    border-color: #4caf50 !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 18px rgba(76, 175, 80, 0.35) !important;
+}
+
+#stage-2 #interaction-area.charging:active {
+    background-color: #388e3c !important;
+}
+
+#stage-2 #interaction-area.blowing {
+    background-color: #ff5722 !important;
+    border-color: #ff5722 !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 18px rgba(255, 87, 34, 0.35) !important;
+}
+
+#stage-2 #interaction-area.blowing:active {
+    background-color: #d84315 !important;
+}
+
+/* ==========================================
+   NÚT BẬT/TẮT NHẠC NỀN
+   ========================================== */
+#music-toggle-btn {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 9998;
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid #d81b60;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    padding: 0;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#music-toggle-btn:hover {
+    transform: scale(1.1);
+    background: #fff;
+}
+#music-toggle-btn:active {
+    transform: scale(0.95);
+}
+#music-toggle-btn.muted {
+    opacity: 0.6;
+    border-color: #888;
+}

@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Hành Trình STOP 4P</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Canvas pháo hoa nổi trên cùng -->
+    <canvas id="fireworks-canvas"></canvas>
+
+    <!-- ==========================================
+         NHẠC NỀN
+         File nhạc: đặt file tên "background-music.mp3"
+         (hoặc .ogg) cùng thư mục với index.html
+         ========================================== -->
+    <audio id="bg-music" loop preload="auto">
+        <source src="background-music.mp3" type="audio/mpeg">
+        <source src="background-music.ogg" type="audio/ogg">
+    </audio>
+
+    <!-- Nút bật/tắt nhạc (ẩn ở trang chủ) -->
+    <button id="music-toggle-btn" onclick="toggleMusic()" title="Bật/Tắt nhạc nền" style="display:none;">
+        🎵
+    </button>
+
+    <!-- Nút quay lại (hiện ở mọi trang trừ trang chủ) -->
+    <button id="back-btn" onclick="goBack()">← Quay lại</button>
+
+    <!-- ==========================================
+         STAGE 0: MÀN HÌNH CHÀO MỪNG / ĐĂNG NHẬP
+         ========================================== -->
+    <div id="stage-0" class="stage active" style="display: flex; justify-content: center; align-items: center;">
+        <div id="welcome-modal" style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; max-width: 400px; width: 90%;">
+            <h2 style="color: #D81B60; margin-bottom: 10px;">Chào chị,</h2>
+
+            <!-- Bước 1: Nhập SĐT -->
+            <div id="step-phone">
+                <p style="color: #666; margin-bottom: 20px;">Vui lòng nhập số điện thoại để hệ thống ghi nhớ chị nhé.</p>
+                <input type="tel" id="input-phone" placeholder="Số điện thoại..."
+                       style="width: 100%; padding: 15px; border: 2px solid #FFCDD2; border-radius: 30px; margin-bottom: 20px; font-size: 16px; outline: none; text-align: center; box-sizing: border-box;">
+                <button onclick="checkPhone()"
+                        style="background: #E91E63; color: white; border: none; padding: 15px 40px; border-radius: 30px; font-size: 16px; cursor: pointer; font-weight: bold; width: 100%;">
+                    Tiếp tục
+                </button>
+            </div>
+
+            <!-- Bước 2: Nhập tên (người mới) -->
+            <div id="step-name" style="display: none;">
+                <p style="color: #666; margin-bottom: 20px;">Chị là thành viên mới. Chị tên là gì ạ?</p>
+                <input type="text" id="input-name" placeholder="Tên của chị là..."
+                       style="width: 100%; padding: 15px; border: 2px solid #FFCDD2; border-radius: 30px; margin-bottom: 20px; font-size: 16px; outline: none; text-align: center; box-sizing: border-box;">
+                <button onclick="registerAndStart()"
+                        style="background: #E91E63; color: white; border: none; padding: 15px 40px; border-radius: 30px; font-size: 16px; cursor: pointer; font-weight: bold; width: 100%;">
+                    Bắt đầu hành trình
+                </button>
+            </div>
+
+            <!-- Bước 3: Chào mừng quay lại (người cũ) -->
+            <div id="step-welcome-back" style="display: none;">
+                <p id="welcome-message" style="color: #666; margin-bottom: 20px; font-size: 18px;">Chào mừng chị quay lại!</p>
+                <button onclick="startGameDirectly()"
+                        style="background: #4CAF50; color: white; border: none; padding: 15px 40px; border-radius: 30px; font-size: 16px; cursor: pointer; font-weight: bold; width: 100%;">
+                    Vào chơi thôi
+                </button>
+                <button onclick="showMyHistory()"
+                        style="background-color: #00897b; color: white; border: none; padding: 12px 24px; border-radius: 50px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: all 0.3s ease;"
+                        onmouseover="this.style.backgroundColor='#00796b'; this.style.transform='scale(1.02)'"
+                        onmouseout="this.style.backgroundColor='#00897b'; this.style.transform='scale(1)'">
+                    📖 Xem lại Nhật Ký của mình
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         VIDEO INTRO: SAU KHI ĐĂNG NHẬP / ĐĂNG KÝ
+         (Hiển thị trước Emotion Check)
+         ========================================== -->
+    <div id="stage-video-intro" class="stage video-stage" style="display: none;">
+        <div class="video-container">
+            <h2 class="video-title">Chào mừng đến với hành trình</h2>
+            <div class="video-wrapper">
+                <!-- ⬇⬇⬇ DÁN LINK YOUTUBE CỦA BẠN VÀO data-src BÊN DƯỚI ⬇⬇⬇ -->
+                <!-- Định dạng: https://www.youtube.com/embed/MÃ_VIDEO?rel=0&modestbranding=1 -->
+                <iframe id="yt-video-intro" src=""
+                    data-src="https://www.youtube.com/embed/4Kr-m6e27zg?rel=0&modestbranding=1"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+                <!-- ⬆⬆⬆ DÁN LINK YOUTUBE VÀO data-src Ở TRÊN ⬆⬆⬆ -->
+            </div>
+            <button class="video-next-btn" onclick="goToEmotionCheck()">Bắt đầu hành trình →</button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         EMOTION CHECK: ĐÁNH GIÁ CẢM XÚC ĐẦU VÀO
+         ========================================== -->
+    <div id="stage-emotion-check" class="stage" style="display: none;">
+        <div class="welcome-container" style="width: 90%; max-width: 500px; margin: 0 auto; padding: 20px; border-radius: 20px; text-align: center;">
+            <h2 style="color: #00796B;">Trước khi bắt đầu, chị cảm thấy thế nào?</h2>
+            <p style="color: #666;">Hãy kéo thanh trượt để chọn mức độ phù hợp nhất nhé.</p>
+            <div id="emotion-display-area" style="margin: 30px 0; transition: all 0.3s;">
+                <div id="current-emoji" style="font-size: 80px; margin-bottom: 10px;">😐</div>
+                <div id="current-status" style="font-size: 24px; font-weight: bold; color: #F57F17;">5 - Bình thường (Ổn)</div>
+            </div>
+            <div class="slider-container" style="position: relative; padding: 0 20px; margin-bottom: 40px;">
+                <input type="range" min="1" max="10" value="5" id="emotion-range"
+                       style="width: 100%; height: 15px; border-radius: 10px; background: linear-gradient(to right, #1a237e, #4a148c, #b71c1c, #f57f17, #fdd835, #66bb6a, #00c853); outline: none; -webkit-appearance: none; cursor: pointer;"
+                       oninput="updateEmotionDisplay()">
+                <div style="display: flex; justify-content: space-between; margin-top: 10px; color: #888; font-size: 14px;">
+                    <span>1 (Tuyệt vọng)</span>
+                    <span>10 (Rất tuyệt vời)</span>
+                </div>
+            </div>
+            <button class="btn-start" onclick="submitInitialEmotion()" style="background: #00897b; color: white; border: none; padding: 15px 40px; border-radius: 30px; font-size: 16px; cursor: pointer; font-weight: bold;">Xác nhận & Tiếp tục</button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         VIDEO 1: TRƯỚC STAGE 1 (Chuông Dừng Lại)
+         ========================================== -->
+    <div id="stage-video-1" class="stage video-stage" style="display: none;">
+        <div class="video-container">
+            <h2 class="video-title">Cùng xem hướng dẫn trước khi bắt đầu nhé</h2>
+            <div class="video-wrapper">
+                <iframe id="yt-video-1" src=""
+                    data-src="https://www.youtube.com/embed/iml47PE13VQ?rel=0&modestbranding=1"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            </div>
+            <button class="video-next-btn" onclick="switchStage(1)">Bắt đầu thực hành →</button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         STAGE 1: CHUÔNG DỪNG LẠI (KHỈ)
+         ========================================== -->
+    <div id="stage-1" class="stage">
+        <div id="greeting-text"></div>
+        <div id="monkey-metaphor">Những suy nghĩ trong đầu như những chú khỉ đang chạy nhảy lung tung...</div>
+        <div id="top-message-area"></div>
+        <div class="garden-scene" id="scene-s1"></div>
+        <div id="countdown-display"></div>
+        <div id="controls-container">
+            <button id="stop-btn" onmousedown="startProcess(event)" onmouseup="cancelProcess()" onmouseleave="cancelProcess()" ontouchstart="startProcess(event)" ontouchend="cancelProcess()">🔔</button>
+            <div id="guide-text-s1">Nhấn giữ chuông để ra lệnh<br>"DỪNG LẠI"</div>
+            <div id="success-panel">
+                <div class="fountain">⛲</div>
+                <div class="congrats-text">
+                    🎉 Chúc mừng chị đã hoàn thành trò chơi đầu tiên.<br> Cùng tiếp tục <b>HÀNH TRÌNH BÌNH AN</b> chị nhé.
+                </div>
+                <!-- SỬA: Đi tới Video 2 thay vì Stage 2 -->
+                <button class="next-btn" onclick="switchStage('video-2')">TIẾP TỤC</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         VIDEO 2: TRƯỚC STAGE 2 (Thở cùng Rồng)
+         ========================================== -->
+    <div id="stage-video-2" class="stage video-stage" style="display: none;">
+        <div class="video-container">
+            <h2 class="video-title">Cùng xem hướng dẫn trước khi bắt đầu nhé</h2>
+            <div class="video-wrapper">
+                <iframe id="yt-video-2" src=""
+                    data-src="https://www.youtube.com/embed/VwgK0vBf4sU?rel=0&modestbranding=1"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            </div>
+            <button class="video-next-btn" onclick="switchStage(2)">Bắt đầu thực hành →</button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         STAGE 2: THỞ CÙNG RỒNG
+         ========================================== -->
+    <div id="stage-2" class="stage">
+        <div id="instruction-dragon">Nhấn giữ để bé rồng lấy hơi...</div>
+        <div class="game-scene">
+            <div class="dragon-container">
+                <div class="fire-stream" id="fire"></div>
+                <div class="head">
+                    <div class="eye"></div>
+                    <div class="cheek"></div>
+                    <div class="mouth smile" id="mouth"></div>
+                </div>
+                <div class="body"></div>
+                <div class="belly" id="belly"></div>
+                <div class="arm left"></div>
+                <div class="arm right"></div>
+            </div>
+            <div class="pinwheel-wrapper">
+                <div class="stick"></div>
+                <div class="pinwheel-container" id="pinwheel">
+                    <div class="blade b1"></div><div class="blade b2"></div>
+                    <div class="blade b3"></div><div class="blade b4"></div>
+                    <div class="center-dot"></div>
+                </div>
+            </div>
+        </div>
+        <button id="interaction-area">Nhấn giữ để hít vào (0/3)</button>
+        <!-- Chỉ mở khi hoàn thành đủ 3 nhịp thở -->
+        <button id="next-btn-dragon" onclick="continueAfterDragon()" disabled>Tiếp tục sau 0/3 nhịp thở</button>
+    </div>
+    <!-- ==========================================
+         VIDEO 3: TRƯỚC STAGE 3 (Rà soát cơ thể)
+         ========================================== -->
+    <div id="stage-video-3" class="stage video-stage" style="display: none;">
+        <div class="video-container">
+            <h2 class="video-title">Cùng xem hướng dẫn trước khi bắt đầu nhé</h2>
+            <div class="video-wrapper">
+                <iframe id="yt-video-3" src=""
+                    data-src="https://www.youtube.com/embed/bjMA4I6xp5c?rel=0&modestbranding=1"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            </div>
+            <button class="video-next-btn" onclick="switchStage('pain-map')">Bắt đầu thực hành →</button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         STAGE PAIN MAP: BẢN ĐỒ NỖI ĐAU
+         ========================================== -->
+    <div id="stage-pain-map" class="stage" style="display: none;">
+        <div class="welcome-container" style="width: 90%; max-width: 500px; margin: 0 auto; padding: 20px; text-align: center;">
+            <h2 style="color: #b71c1c; margin-bottom: 5px;">Chị đang cảm thấy mỏi ở đâu?</h2>
+            <p style="color: #666; font-size: 15px; margin-bottom: 20px; font-style: italic;">Chạm vào vùng mỏi, chạm lần nữa để hủy</p>
+            <div id="pain-map-svg-container" style="position: relative; width: 320px; height: 480px; transform: scale(0.9); margin: 0 auto;"></div>
+            <!-- submitPainMap() sẽ đi tới Video 3 (xử lý trong JS) -->
+            <button class="btn-start" style="margin-top: 20px; background-color: #d32f2f; color: white; border: none; padding: 15px 40px; border-radius: 30px; font-size: 16px; cursor: pointer; font-weight: bold;" onclick="submitPainMap()">Chuyển sang Thư giãn</button>
+        </div>
+    </div>
+    <!-- ==========================================
+         STAGE 3: RÀ SOÁT CƠ THỂ (BODY SCAN)
+         ========================================== -->
+    <div id="stage-3" class="stage">
+        <div id="guide-text-body">Hãy bắt đầu rà soát cơ thể mẹ và bé...</div>
+        <div id="meditation-container"></div>
+        <div id="action-buttons-body">
+            <!-- SỬA: Đi tới Video 4 thay vì Stage 4 -->
+            <button id="continue-btn-body" onclick="switchStage('video-4')">Tiếp tục hành trình →</button>
+            <button id="restart-btn-body" onclick="initBodyScan()">↺ Thực hành lại</button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         VIDEO 4: TRƯỚC STAGE 4 (Gọi tên cảm xúc)
+         ========================================== -->
+    <div id="stage-video-4" class="stage video-stage" style="display: none;">
+        <div class="video-container">
+            <h2 class="video-title">Cùng xem hướng dẫn trước khi bắt đầu nhé</h2>
+            <div class="video-wrapper">
+                <iframe id="yt-video-4" src=""
+                    data-src="https://www.youtube.com/embed/3HWlUir3K6o?rel=0&modestbranding=1"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            </div>
+            <button class="video-next-btn" onclick="switchStage(4)">Bắt đầu thực hành →</button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         STAGE 4: GỌI TÊN CẢM XÚC (CAPYBARA)
+         ========================================== -->
+    <div id="stage-4" class="stage">
+        <div id="selection-screen">
+            <h2>Cảm xúc hiện tại của chị giống bé Capybara nào nhất?</h2>
+            <p class="subtitle">Gọi tên cảm xúc giúp giảm đi sự mơ hồ trong tâm trí...</p>
+            <div class="emotion-grid">
+                <div class="capy-card" onclick="selectEmotion('Vui vẻ')"><img src="vui.jpg" alt="Vui vẻ" class="capy-img"></div>
+                <div class="capy-card" onclick="selectEmotion('Buồn')"><img src="buồn.jpg" alt="Buồn" class="capy-img"></div>
+                <div class="capy-card" onclick="selectEmotion('Lo lắng')"><img src="khóc.jpg" alt="Lo lắng" class="capy-img"></div>
+                <div class="capy-card" onclick="selectEmotion('Khó chịu')"><img src="tức.jpg" alt="Khó chịu" class="capy-img"></div>
+                <div class="capy-card" onclick="selectEmotion('Hoảng hốt')"><img src="hoảng hốt.jpg" alt="Hoảng hốt" class="capy-img"></div>
+                <div class="capy-card" onclick="selectEmotion('Mệt mỏi')"><img src="khó chịu.jpg" alt="Mệt mỏi" class="capy-img"></div>
+            </div>
+        </div>
+        <div id="feedback-screen">
+            <div class="feedback-text">"Cảm ơn chị đã dũng cảm gọi tên cảm xúc.<br>Bây giờ, mình cùng trút bỏ gánh nặng nhé."</div>
+            <!-- SỬA: Đi tới Video 5 thay vì Stage 5 -->
+            <button class="btn-next-capy" onclick="switchStage('video-5')">Tiếp tục hành trình →</button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         VIDEO 5: TRƯỚC STAGE 5 (Quan sát suy nghĩ)
+         ========================================== -->
+    <div id="stage-video-5" class="stage video-stage" style="display: none;">
+        <div class="video-container">
+            <h2 class="video-title">Cùng xem hướng dẫn trước khi bắt đầu nhé</h2>
+            <div class="video-wrapper">
+                <iframe id="yt-video-5" src=""
+                    data-src="https://www.youtube.com/embed/645rUkp3nc4?rel=0&modestbranding=1"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            </div>
+            <button class="video-next-btn" onclick="switchStage(5)">Bắt đầu thực hành →</button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         STAGE 5: QUAN SÁT SUY NGHĨ (ĐÁM MÂY)
+         ========================================== -->
+    <div id="stage-5" class="stage">
+        <div class="sun"></div>
+        <div id="hint-text-cloud">Chạm vào bầu trời để viết tiếp...</div>
+        <div id="input-container-cloud">
+            <h2>Quan Sát Suy Nghĩ</h2>
+            <p>Suy nghĩ nào đang làm phiền chị?<br>Hãy viết nó ra và để gió cuốn đi.</p>
+            <input type="text" id="thoughtInput" placeholder="Ví dụ: lo lắng..." autocomplete="off">
+            <button id="sendBtn" class="btn-primary" onclick="createCloud(event)">Hít vào và dán lên đám mây</button>
+            <!-- SỬA: Đi tới Video 6 thay vì Stage 6 -->
+            <button class="btn-secondary" onclick="switchStage('video-6')">Tiếp tục hành trình →</button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         VIDEO 6: TRƯỚC STAGE 6 (Hũ Bình An)
+         ========================================== -->
+    <div id="stage-video-6" class="stage video-stage" style="display: none;">
+        <div class="video-container">
+            <h2 class="video-title">Cùng xem hướng dẫn trước khi bắt đầu nhé</h2>
+            <div class="video-wrapper">
+                <iframe id="yt-video-6" src=""
+                    data-src="https://www.youtube.com/embed/LWt4Xqm6iwo?rel=0&modestbranding=1"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            </div>
+            <button class="video-next-btn" onclick="switchStage(6)">Bắt đầu thực hành →</button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         STAGE 6: HŨ BÌNH AN
+         ========================================== -->
+    <div id="stage-6" class="stage">
+        <div id="intro-screen-jar">
+            <div class="instruction-text">Để kết thúc bài thực hành, chị hãy dành một khoảnh khắc kết nối với em bé hoặc với chính mình.<br><br>Hãy đặt 2 tay lên ngực và thầm nói:</div>
+            <div class="mantra">"Mẹ con mình cùng Bình An nhé"</div>
+            <button class="btn" id="connect-btn-s6" onclick="goToWrite()">Đã kết nối</button>
+        </div>
+        <div id="write-screen-jar">
+            <div style="margin-bottom: 20px; font-size: 30px; color: #880e4f;">Viết lời nhắn yêu thương lên trái tim này:</div>
+            <div class="heart-note"><textarea id="note-input" placeholder="Nhắn nhủ điều gì đó..."></textarea></div>
+            <button class="btn" onclick="saveToJar()">Cất vào Hũ Bình An</button>
+        </div>
+        <div id="jar-screen-final">
+            <div class="jar" id="jar">
+                <div class="small-heart" style="bottom: 10px; left: 30px; transform: rotate(-30deg) scale(0.8); background:#f48fb1"></div>
+                <div class="small-heart" style="bottom: 20px; right: 40px; transform: rotate(-60deg) scale(0.7); background:#f06292"></div>
+                <div class="small-heart" style="bottom: 40px; left: 60px; transform: rotate(-15deg) scale(0.6); background:#f8bbd0"></div>
+            </div>
+            <div id="final-message">Chúc hai mẹ con luôn Bình An! ❤️</div>
+            <button id="continue-btn-jar" class="btn" onclick="switchStage(7)">Tiếp tục hành trình →</button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         STAGE 7: ĐÁNH GIÁ CẢM XÚC SAU HÀNH TRÌNH
+         ========================================== -->
+    <div id="stage-7" class="stage">
+        <div class="welcome-container" style="width: 90%; max-width: 500px; margin: 0 auto; padding: 20px; border-radius: 20px; text-align: center; background: white;">
+            <h2 style="color: black; font-weight: 900;">Sau hành trình, chị cảm thấy thế nào?</h2>
+            <p style="color: black; font-weight: 900;">Hãy kéo thanh trượt để chọn mức độ phù hợp nhất nhé.</p>
+            <div class="emotion-display-area" style="margin: 30px 0;">
+                <div id="final-emoji" style="font-size: 80px; margin-bottom: 10px;">🙂</div>
+                <div id="final-status" style="font-size: 24px; font-weight: bold; color: #F57F17;">6 - Tương đối tốt</div>
+            </div>
+            <div class="slider-container" style="padding: 0 10px;">
+                <input type="range" min="1" max="10" value="6" id="final-range" oninput="updateFinalEmotionDisplay()" style="width: 100%; height: 15px; border-radius: 10px; outline: none; -webkit-appearance: none; cursor: pointer; background: linear-gradient(to right, #1a237e, #4a148c, #b71c1c, #f57f17, #fdd835, #66bb6a, #00c853);">
+                <div style="display: flex; justify-content: space-between; color: #888; font-size: 14px; margin-top: 10px; font-weight:bold;">
+                    <span>1 (Tuyệt vọng)</span><span>10 (Rất tuyệt vời)</span>
+                </div>
+            </div>
+            <button class="btn-start" onclick="switchStage('usefulness')" style="margin-top: 30px; background: #00897b; color: white; border: none; padding: 15px 40px; border-radius: 30px; font-size: 16px; cursor: pointer; font-weight: bold;">Tiếp tục đánh giá</button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         STAGE USEFULNESS: ĐÁNH GIÁ SỰ HỮU ÍCH
+         ========================================== -->
+    <div id="stage-usefulness" class="stage">
+        <div class="usefulness-container">
+            <h2>Đánh giá sự hữu ích</h2>
+            <p class="usefulness-intro">Chị tick vào những giai đoạn mà chị cảm thấy có ích với mình.</p>
+
+            <div class="stage-rating-block" id="stage-rating-1">
+                <label class="stage-tick-row" for="stage-check-1">
+                    <input type="checkbox" id="stage-check-1" class="stage-useful-checkbox" data-stage="1" onchange="toggleStageTick(1)">
+                    <span class="custom-check"></span>
+                    <span class="stage-title">1. Chuông "Dừng Lại"</span>
+                    <span class="tick-status" id="tick-status-1">Chưa tick</span>
+                </label>
+            </div>
+
+            <div class="stage-rating-block" id="stage-rating-2">
+                <label class="stage-tick-row" for="stage-check-2">
+                    <input type="checkbox" id="stage-check-2" class="stage-useful-checkbox" data-stage="2" onchange="toggleStageTick(2)">
+                    <span class="custom-check"></span>
+                    <span class="stage-title">2. Thở cùng Rồng</span>
+                    <span class="tick-status" id="tick-status-2">Chưa tick</span>
+                </label>
+            </div>
+
+            <div class="stage-rating-block" id="stage-rating-3">
+                <label class="stage-tick-row" for="stage-check-3">
+                    <input type="checkbox" id="stage-check-3" class="stage-useful-checkbox" data-stage="3" onchange="toggleStageTick(3)">
+                    <span class="custom-check"></span>
+                    <span class="stage-title">3. Cảm nhận nỗi đau</span>
+                    <span class="tick-status" id="tick-status-3">Chưa tick</span>
+                </label>
+            </div>
+
+            <div class="stage-rating-block" id="stage-rating-4">
+                <label class="stage-tick-row" for="stage-check-4">
+                    <input type="checkbox" id="stage-check-4" class="stage-useful-checkbox" data-stage="4" onchange="toggleStageTick(4)">
+                    <span class="custom-check"></span>
+                    <span class="stage-title">4. Rà soát cơ thể</span>
+                    <span class="tick-status" id="tick-status-4">Chưa tick</span>
+                </label>
+            </div>
+
+            <div class="stage-rating-block" id="stage-rating-5">
+                <label class="stage-tick-row" for="stage-check-5">
+                    <input type="checkbox" id="stage-check-5" class="stage-useful-checkbox" data-stage="5" onchange="toggleStageTick(5)">
+                    <span class="custom-check"></span>
+                    <span class="stage-title">5. Gọi tên cảm xúc</span>
+                    <span class="tick-status" id="tick-status-5">Chưa tick</span>
+                </label>
+            </div>
+
+            <div class="stage-rating-block" id="stage-rating-6">
+                <label class="stage-tick-row" for="stage-check-6">
+                    <input type="checkbox" id="stage-check-6" class="stage-useful-checkbox" data-stage="6" onchange="toggleStageTick(6)">
+                    <span class="custom-check"></span>
+                    <span class="stage-title">6. Quan sát suy nghĩ</span>
+                    <span class="tick-status" id="tick-status-6">Chưa tick</span>
+                </label>
+            </div>
+
+            <div class="stage-rating-block" id="stage-rating-7">
+                <label class="stage-tick-row" for="stage-check-7">
+                    <input type="checkbox" id="stage-check-7" class="stage-useful-checkbox" data-stage="7" onchange="toggleStageTick(7)">
+                    <span class="custom-check"></span>
+                    <span class="stage-title">7. Hũ Bình An</span>
+                    <span class="tick-status" id="tick-status-7">Chưa tick</span>
+                </label>
+            </div>
+
+            <div class="evaluation-note-block">
+                <div class="evaluation-note-title">💬 Ghi nhận đánh giá</div>
+                <textarea id="evaluation-note" placeholder="Chị có thể ghi nhận cảm nhận, góp ý hoặc điều chị muốn nhắn lại sau hành trình..." onfocus="this.style.borderColor='#00897b'" onblur="this.style.borderColor='#e0e0e0'"></textarea>
+            </div>
+
+            <button id="finish-eval-btn" onclick="submitUsefulnessEval()">Hoàn thành hành trình</button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         STAGE EVAL 1 & 2 (Dự phòng - hiện chưa dùng)
+         ========================================== -->
+    <div id="stage-eval-1" class="stage" style="display:none;">
+        <div class="welcome-container" style="width: 90%; max-width: 500px; margin: 0 auto; padding: 20px; text-align: center; background: white; border-radius: 20px;">
+            <h2 style="color: black; font-weight: 900; margin-bottom: 20px;">Câu hỏi đánh giá 1 (Bỏ trống)</h2>
+            <div class="emotion-display-area" style="margin: 30px 0;">
+                <div id="eval-1-emoji" style="font-size: 80px; margin-bottom: 10px;">😐</div>
+                <div id="eval-1-status" style="font-size: 24px; font-weight: bold; color: #F57F17;">5 - Bình thường (Ổn)</div>
+            </div>
+            <div class="slider-container" style="position: relative; padding: 0 10px; margin-bottom: 40px;">
+                <input type="range" id="eval-1-range" min="1" max="10" value="5" oninput="updateEval1Display()" style="width: 100%; height: 15px; border-radius: 10px; outline: none; -webkit-appearance: none; cursor: pointer; background: linear-gradient(to right, #1a237e, #4a148c, #b71c1c, #f57f17, #fdd835, #66bb6a, #00c853);">
+                <div style="display: flex; justify-content: space-between; margin-top: 10px; color: #888; font-size: 14px; font-weight: bold;">
+                    <span>1 (Rất tệ)</span><span>10 (Tuyệt vời)</span>
+                </div>
+            </div>
+            <button class="btn-start" style="background: #00897b; color: white; border: none; padding: 15px 40px; border-radius: 30px; font-size: 16px; cursor: pointer; font-weight: bold;" onclick="submitEval1()">Tiếp tục</button>
+        </div>
+    </div>
+
+    <div id="stage-eval-2" class="stage" style="display:none;">
+        <div class="welcome-container" style="width: 90%; max-width: 500px; margin: 0 auto; padding: 20px; text-align: center; background: white; border-radius: 20px;">
+            <h2 style="color: black; font-weight: 900; margin-bottom: 20px;">Câu hỏi đánh giá 2 (Bỏ trống)</h2>
+            <div class="emotion-display-area" style="margin: 30px 0;">
+                <div id="eval-2-emoji" style="font-size: 80px; margin-bottom: 10px;">😐</div>
+                <div id="eval-2-status" style="font-size: 24px; font-weight: bold; color: #F57F17;">5 - Bình thường (Ổn)</div>
+            </div>
+            <div class="slider-container" style="position: relative; padding: 0 10px; margin-bottom: 40px;">
+                <input type="range" id="eval-2-range" min="1" max="10" value="5" oninput="updateEval2Display()" style="width: 100%; height: 15px; border-radius: 10px; outline: none; -webkit-appearance: none; cursor: pointer; background: linear-gradient(to right, #1a237e, #4a148c, #b71c1c, #f57f17, #fdd835, #66bb6a, #00c853);">
+                <div style="display: flex; justify-content: space-between; margin-top: 10px; color: #888; font-size: 14px; font-weight: bold;">
+                    <span>1 (Rất tệ)</span><span>10 (Tuyệt vời)</span>
+                </div>
+            </div>
+            <button class="btn-start" style="background: #00897b; color: white; border: none; padding: 15px 40px; border-radius: 30px; font-size: 16px; cursor: pointer; font-weight: bold;" onclick="submitEval2()">Hoàn thành</button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         ADMIN PANEL
+         ========================================== -->
+    <div id="admin-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.98); z-index: 9999; overflow-y: auto;">
+        <div style="max-width: 1000px; margin: 50px auto; padding: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #d81b60; padding-bottom: 10px;">
+                <h2 style="color: #d81b60; margin: 0;">🔐 QUẢN TRỊ VIÊN</h2>
+                <button onclick="closeAdmin()" style="background: #333; color: white; border: none; padding: 8px 15px; cursor: pointer; border-radius: 5px;">Thoát X</button>
+            </div>
+            <div style="margin-top: 20px;">
+                <button onclick="fetchHistory()" style="background: #4caf50; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">🔄 Làm mới dữ liệu</button>
+            </div>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 20px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                <thead>
+                    <tr style="background: #f8bbd0; color: #880e4f;">
+                        <th style="padding: 12px; border: 1px solid #ddd;">Ngày giờ</th>
+                        <th style="padding: 12px; border: 1px solid #ddd;">Tên</th>
+                        <th style="padding: 12px; border: 1px solid #ddd;">SĐT</th>
+                        <th style="padding: 12px; border: 1px solid #ddd;">Mood Đầu</th>
+                        <th style="padding: 12px; border: 1px solid #ddd;">Capybara</th>
+                        <th style="padding: 12px; border: 1px solid #ddd;">Đám mây</th>
+                        <th style="padding: 12px; border: 1px solid #ddd;">Lời nhắn</th>
+                        <th style="padding: 12px; border: 1px solid #ddd;">Mood Cuối</th>
+                        <th style="padding: 12px; border: 1px solid #ddd; text-align: center;">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         MODAL LỊCH SỬ CÁ NHÂN
+         ========================================== -->
+    <div id="my-history-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; overflow-y: auto;">
+        <div style="max-width: 600px; margin: 50px auto; background: white; padding: 25px; border-radius: 15px; text-align: center;">
+            <h2 style="color: #009688; margin-bottom: 20px;">📖 Nhật Ký Cảm Xúc</h2>
+            <div id="my-history-content" style="max-height: 400px; overflow-y: auto; text-align: left;"></div>
+            <button onclick="closeMyHistory()" style="margin-top: 20px; background: #555; color: white; border: none; padding: 10px 30px; border-radius: 5px; cursor: pointer;">Đóng lại</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
