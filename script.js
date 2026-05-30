@@ -36,8 +36,8 @@ let currentUser = {
 
 // Background gradient cho từng màn hình (bao gồm cả 6 video stages)
 const stageBackgrounds = {
-    0: "linear-gradient(to bottom, #fffde7, #ffffff)",
-    'video-intro': "linear-gradient(to bottom, #fff3e0, #ffe0b2)", // Video intro sau đăng nhập
+    0: "linear-gradient(145deg, #fce8e3 0%, #f8ddd9 100%)",
+    'video-intro': "linear-gradient(145deg, #fce8e3 0%, #f5d8d4 100%)", // Video intro sau đăng nhập
     'video-1': "linear-gradient(to bottom, #e8f5e9, #c8e6c9)",       // Video trước Stage 1
     1: "linear-gradient(to bottom, #a5d6a7, #e8f5e9)",
     'video-2': "linear-gradient(to bottom, #e0f7fa, #b2ebf2)",       // Video trước Stage 2

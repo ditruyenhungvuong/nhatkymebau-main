@@ -6,6 +6,7 @@ html, body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     -webkit-tap-highlight-color: transparent;
     user-select: none; -webkit-user-select: none;
+    background: linear-gradient(145deg, #fce8e3 0%, #f8ddd9 100%);
     transition: background 1.5s ease;
 }
 .hair-tone { 
@@ -673,6 +674,7 @@ html, body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     -webkit-tap-highlight-color: transparent;
     user-select: none; -webkit-user-select: none;
+    background: linear-gradient(145deg, #fce8e3 0%, #f8ddd9 100%);
     transition: background 1.5s ease;
 }
 .hair-tone { 
@@ -1601,7 +1603,7 @@ html, body {
 
 /* --- Tiêu đề phía trên video --- */
 .video-stage .video-title {
-    color: #00796b;
+    color: #B87060;
     font-size: 22px;
     font-weight: 700;
     margin-bottom: 20px;
@@ -1635,14 +1637,14 @@ html, body {
 .video-stage .video-next-btn {
     margin-top: 25px;
     padding: 14px 40px;
-    background-color: #00897b;
+    background-color: #B87570;
     color: white;
     border: none;
     border-radius: 30px;
     font-size: 17px;
     font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 5px 15px rgba(0, 137, 123, 0.3);
+    box-shadow: 0 5px 15px rgba(180, 110, 100, 0.35);
     transition: all 0.2s ease;
     -webkit-appearance: none;
     outline: none;
@@ -1651,7 +1653,7 @@ html, body {
 /* --- Hiệu ứng hover --- */
 .video-stage .video-next-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 137, 123, 0.4);
+    box-shadow: 0 8px 20px rgba(180, 110, 100, 0.45);
 }
 
 /* --- Hiệu ứng nhấn --- */
